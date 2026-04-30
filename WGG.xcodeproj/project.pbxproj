@@ -38,12 +38,21 @@
 /* Begin PBXFileReference section */
 		C451C6F82FA30C6F00B45E4F /* WGG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WGG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C451C73B2FA3126C00B45E4F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		C451C7552FA3133900B45E4F /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
-		C451C7562FA3133900B45E4F /* WatchDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDashboardView.swift; sourceTree = "<group>"; };
-		C451C7572FA3133900B45E4F /* WatchWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutView.swift; sourceTree = "<group>"; };
-		C451C7582FA3133900B45E4F /* WatchItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchItemRow.swift; sourceTree = "<group>"; };
 		C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WGG Watch App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C451C76E2FA314B300B45E4F /* Exceptions for "WGG Watch App Watch App" folder in "WGG Watch App Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Components/WatchItemRow.swift,
+				Views/WatchContentView.swift,
+				Views/WatchDashboardView.swift,
+				Views/WatchWorkoutView.swift,
+			);
+			target = C451C75C2FA3142900B45E4F /* WGG Watch App Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C451C6FA2FA30C6F00B45E4F /* WGG */ = {
@@ -53,6 +62,9 @@
 		};
 		C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C451C76E2FA314B300B45E4F /* Exceptions for "WGG Watch App Watch App" folder in "WGG Watch App Watch App" target */,
+			);
 			path = "WGG Watch App Watch App";
 			sourceTree = "<group>";
 		};
@@ -83,7 +95,6 @@
 				C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */,
 				C451C6F92FA30C6F00B45E4F /* Products */,
 				C451C74F2FA3132800B45E4F /* Shared */,
-				C451C7502FA3132800B45E4F /* WGG Watch App */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,39 +115,12 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		C451C7502FA3132800B45E4F /* WGG Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				C451C7522FA3132B00B45E4F /* Views */,
-				C451C7532FA3132C00B45E4F /* Components */,
-			);
-			path = "WGG Watch App";
-			sourceTree = "<group>";
-		};
 		C451C7512FA3132B00B45E4F /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				C451C73B2FA3126C00B45E4F /* Item.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		C451C7522FA3132B00B45E4F /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				C451C7552FA3133900B45E4F /* WatchContentView.swift */,
-				C451C7562FA3133900B45E4F /* WatchDashboardView.swift */,
-				C451C7572FA3133900B45E4F /* WatchWorkoutView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		C451C7532FA3132C00B45E4F /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				C451C7582FA3133900B45E4F /* WatchItemRow.swift */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
