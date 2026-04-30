@@ -8,16 +8,41 @@
 
 /* Begin PBXBuildFile section */
 		C451C74C2FA3126C00B45E4F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451C73B2FA3126C00B45E4F /* Item.swift */; };
+		C451C7672FA3142900B45E4F /* WGG Watch App Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C451C7652FA3142900B45E4F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C451C6F02FA30C6F00B45E4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C451C75C2FA3142900B45E4F;
+			remoteInfo = "WGG Watch App Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C451C76B2FA3142900B45E4F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				C451C7672FA3142900B45E4F /* WGG Watch App Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C451C6F82FA30C6F00B45E4F /* WGG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WGG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C451C73B2FA3126C00B45E4F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		C451C7542FA3133300B45E4F /* WGGWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGGWatchApp.swift; sourceTree = "<group>"; };
 		C451C7552FA3133900B45E4F /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
 		C451C7562FA3133900B45E4F /* WatchDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDashboardView.swift; sourceTree = "<group>"; };
 		C451C7572FA3133900B45E4F /* WatchWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutView.swift; sourceTree = "<group>"; };
 		C451C7582FA3133900B45E4F /* WatchItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchItemRow.swift; sourceTree = "<group>"; };
+		C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WGG Watch App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -26,10 +51,22 @@
 			path = WGG;
 			sourceTree = "<group>";
 		};
+		C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WGG Watch App Watch App";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C451C6F52FA30C6F00B45E4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C451C75A2FA3142900B45E4F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -43,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				C451C6FA2FA30C6F00B45E4F /* WGG */,
+				C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */,
 				C451C6F92FA30C6F00B45E4F /* Products */,
 				C451C74F2FA3132800B45E4F /* Shared */,
 				C451C7502FA3132800B45E4F /* WGG Watch App */,
@@ -53,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				C451C6F82FA30C6F00B45E4F /* WGG.app */,
+				C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,7 +109,6 @@
 			children = (
 				C451C7522FA3132B00B45E4F /* Views */,
 				C451C7532FA3132C00B45E4F /* Components */,
-				C451C7542FA3133300B45E4F /* WGGWatchApp.swift */,
 			);
 			path = "WGG Watch App";
 			sourceTree = "<group>";
@@ -111,10 +149,12 @@
 				C451C6F42FA30C6F00B45E4F /* Sources */,
 				C451C6F52FA30C6F00B45E4F /* Frameworks */,
 				C451C6F62FA30C6F00B45E4F /* Resources */,
+				C451C76B2FA3142900B45E4F /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C451C7662FA3142900B45E4F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C451C6FA2FA30C6F00B45E4F /* WGG */,
@@ -124,6 +164,28 @@
 			);
 			productName = WGG;
 			productReference = C451C6F82FA30C6F00B45E4F /* WGG.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C451C75C2FA3142900B45E4F /* WGG Watch App Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C451C7682FA3142900B45E4F /* Build configuration list for PBXNativeTarget "WGG Watch App Watch App" */;
+			buildPhases = (
+				C451C7592FA3142900B45E4F /* Sources */,
+				C451C75A2FA3142900B45E4F /* Frameworks */,
+				C451C75B2FA3142900B45E4F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */,
+			);
+			name = "WGG Watch App Watch App";
+			packageProductDependencies = (
+			);
+			productName = "WGG Watch App Watch App";
+			productReference = C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -137,6 +199,9 @@
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					C451C6F72FA30C6F00B45E4F = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					C451C75C2FA3142900B45E4F = {
 						CreatedOnToolsVersion = 26.4.1;
 					};
 				};
@@ -156,12 +221,20 @@
 			projectRoot = "";
 			targets = (
 				C451C6F72FA30C6F00B45E4F /* WGG */,
+				C451C75C2FA3142900B45E4F /* WGG Watch App Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C451C6F62FA30C6F00B45E4F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C451C75B2FA3142900B45E4F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -179,7 +252,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C451C7592FA3142900B45E4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C451C7662FA3142900B45E4F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C451C75C2FA3142900B45E4F /* WGG Watch App Watch App */;
+			targetProxy = C451C7652FA3142900B45E4F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C451C7012FA30C6F00B45E4F /* Debug */ = {
@@ -367,6 +455,72 @@
 			};
 			name = Release;
 		};
+		C451C7692FA3142900B45E4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R93K2HFM78;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "WGG Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.eganugraha.WGG;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.eganugraha.WGG.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Debug;
+		};
+		C451C76A2FA3142900B45E4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R93K2HFM78;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "WGG Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.eganugraha.WGG;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.eganugraha.WGG.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.4;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -384,6 +538,15 @@
 			buildConfigurations = (
 				C451C7042FA30C6F00B45E4F /* Debug */,
 				C451C7052FA30C6F00B45E4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C451C7682FA3142900B45E4F /* Build configuration list for PBXNativeTarget "WGG Watch App Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C451C7692FA3142900B45E4F /* Debug */,
+				C451C76A2FA3142900B45E4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
