@@ -6,8 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C451C74C2FA3126C00B45E4F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451C73B2FA3126C00B45E4F /* Item.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		C451C6F82FA30C6F00B45E4F /* WGG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WGG.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C451C73B2FA3126C00B45E4F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		C451C7542FA3133300B45E4F /* WGGWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGGWatchApp.swift; sourceTree = "<group>"; };
+		C451C7552FA3133900B45E4F /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
+		C451C7562FA3133900B45E4F /* WatchDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDashboardView.swift; sourceTree = "<group>"; };
+		C451C7572FA3133900B45E4F /* WatchWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutView.swift; sourceTree = "<group>"; };
+		C451C7582FA3133900B45E4F /* WatchItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchItemRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +44,8 @@
 			children = (
 				C451C6FA2FA30C6F00B45E4F /* WGG */,
 				C451C6F92FA30C6F00B45E4F /* Products */,
+				C451C74F2FA3132800B45E4F /* Shared */,
+				C451C7502FA3132800B45E4F /* WGG Watch App */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,6 +55,50 @@
 				C451C6F82FA30C6F00B45E4F /* WGG.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C451C74F2FA3132800B45E4F /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				C451C7512FA3132B00B45E4F /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		C451C7502FA3132800B45E4F /* WGG Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				C451C7522FA3132B00B45E4F /* Views */,
+				C451C7532FA3132C00B45E4F /* Components */,
+				C451C7542FA3133300B45E4F /* WGGWatchApp.swift */,
+			);
+			path = "WGG Watch App";
+			sourceTree = "<group>";
+		};
+		C451C7512FA3132B00B45E4F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C451C73B2FA3126C00B45E4F /* Item.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C451C7522FA3132B00B45E4F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C451C7552FA3133900B45E4F /* WatchContentView.swift */,
+				C451C7562FA3133900B45E4F /* WatchDashboardView.swift */,
+				C451C7572FA3133900B45E4F /* WatchWorkoutView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C451C7532FA3132C00B45E4F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C451C7582FA3133900B45E4F /* WatchItemRow.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C451C74C2FA3126C00B45E4F /* Item.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
