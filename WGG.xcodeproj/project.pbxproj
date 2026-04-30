@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C451C74C2FA3126C00B45E4F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451C73B2FA3126C00B45E4F /* Item.swift */; };
 		C451C7672FA3142900B45E4F /* WGG Watch App Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -37,7 +36,6 @@
 
 /* Begin PBXFileReference section */
 		C451C6F82FA30C6F00B45E4F /* WGG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WGG.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C451C73B2FA3126C00B45E4F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WGG Watch App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -94,7 +92,6 @@
 				C451C6FA2FA30C6F00B45E4F /* WGG */,
 				C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */,
 				C451C6F92FA30C6F00B45E4F /* Products */,
-				C451C74F2FA3132800B45E4F /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,22 +102,6 @@
 				C451C75D2FA3142900B45E4F /* WGG Watch App Watch App.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C451C74F2FA3132800B45E4F /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				C451C7512FA3132B00B45E4F /* Models */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		C451C7512FA3132B00B45E4F /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				C451C73B2FA3126C00B45E4F /* Item.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,7 +213,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C451C74C2FA3126C00B45E4F /* Item.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
