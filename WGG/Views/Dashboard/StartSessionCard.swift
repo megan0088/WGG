@@ -1,0 +1,18 @@
+//
+//  StartSessionCard.swift
+//  WGG
+//
+//  Created by Stepanus Imanuel on 01/05/26.
+//
+
+import SwiftUI
+
+struct StartSessionCard: View {
+    var body: some View {
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    }
+}
+
+#Preview {
+    StartSessionCard()
+}
