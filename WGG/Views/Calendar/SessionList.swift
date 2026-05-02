@@ -7,12 +7,34 @@
 
 import SwiftUI
 
-struct SessionList: View {
+struct SessionListView: View {
+    let date: Date
+    let calendar = Calendar.current
+    
+    var sessionsForDate: [WorkoutSession] {
+        DashboardData.sessions.filter {
+            calendar.isDate($0.date, inSameDayAs: date)
+        }
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            if sessionsForDate.isEmpty {
+                ContentUnavailableView("No Workouts", systemImage: "dumbbell.fill")
+                    .foregroundStyle(.gray)
+                    .frame(height: 200)
+            } else {
+                ScrollView {
+                    ForEach(sessionsForDate) { session in
+                        SessionCard(session: session)
+                    }
+                }
+                .frame(minHeight: 200)
+            }
+        }
     }
 }
 
 #Preview {
-    SessionList()
+    SessionListView(date: Date())
 }

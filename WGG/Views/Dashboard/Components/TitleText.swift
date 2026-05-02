@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct TitleText: View {
+    let text: String
+    var isUpper: Bool
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(text)
+            .font(.subheadline)
+            .fontWeight(.bold)
+            .foregroundStyle(Color("Secondary"))
+            .textCase(isUpper ? .uppercase : .none)
     }
 }
 
 #Preview {
-    TitleText()
+    TitleText(text: "Hello World!", isUpper: true)
 }

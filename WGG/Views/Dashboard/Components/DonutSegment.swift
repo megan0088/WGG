@@ -7,12 +7,27 @@
 
 import SwiftUI
 
-struct DonutSegment: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct DonutSegment: Shape {
+    var startAngle: Double
+    var endAngle: Double
+    
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let radius = min(rect.width, rect.height) / 2
+        
+        var path = Path()
+        
+        path.addArc(
+            center: center,
+            radius: radius,
+            startAngle: .degrees(startAngle),
+            endAngle: .degrees(endAngle),
+            clockwise: false
+        )
+        
+        return path.strokedPath(
+            StrokeStyle(lineWidth: 8, lineCap: .butt)
+        )
     }
 }
 
-#Preview {
-    DonutSegment()
-}
