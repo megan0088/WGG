@@ -40,13 +40,12 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C451C76E2FA314B300B45E4F /* Exceptions for "WGG Watch App Watch App" folder in "WGG Watch App Watch App" target */ = {
+		CB2825ED2FA5A67D004A767D /* Exceptions for "WGG" folder in "WGG Watch App Watch App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Components/WatchItemRow.swift,
-				Views/WatchContentView.swift,
-				Views/WatchDashboardView.swift,
-				Views/WatchWorkoutView.swift,
+				Models/Item.swift,
+				Models/Workout/Exercise.swift,
+				Models/Workout/Routine.swift,
 			);
 			target = C451C75C2FA3142900B45E4F /* WGG Watch App Watch App */;
 		};
@@ -55,14 +54,14 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C451C6FA2FA30C6F00B45E4F /* WGG */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CB2825ED2FA5A67D004A767D /* Exceptions for "WGG" folder in "WGG Watch App Watch App" target */,
+			);
 			path = WGG;
 			sourceTree = "<group>";
 		};
 		C451C75E2FA3142900B45E4F /* WGG Watch App Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C451C76E2FA314B300B45E4F /* Exceptions for "WGG Watch App Watch App" folder in "WGG Watch App Watch App" target */,
-			);
 			path = "WGG Watch App Watch App";
 			sourceTree = "<group>";
 		};
