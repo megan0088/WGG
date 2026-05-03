@@ -14,8 +14,8 @@ struct MockAnalyticsData {
         return calendar.date(from: DateComponents(year: year, month: month, day: day)) ?? Date()
     }
     
-    static let allSessions: [WorkoutSession] = [
-        WorkoutSession(date: createDate(day: 1, month: 4, year: 2026), exercises: [
+    static let allSessions: [WorkoutSession2] = [
+        WorkoutSession2(date: createDate(day: 1, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 12.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 15),
@@ -29,7 +29,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 17.5),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 3, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 3, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 22.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 25),
@@ -43,7 +43,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 27.5),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 7, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 7, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 22.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 25),
@@ -57,7 +57,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 30),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 12, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 12, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 32.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 35),
@@ -71,7 +71,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 30),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 17, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 17, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 42.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 45),
@@ -85,7 +85,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 37.5),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 23, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 23, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 42.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 45),
@@ -99,7 +99,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 47.5),
             ])
         ]),
-        WorkoutSession(date: createDate(day: 27, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 27, month: 4, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 52.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 55),

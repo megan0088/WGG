@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WorkoutSession: Identifiable {
+struct WorkoutSession2: Identifiable {
     let id = UUID()
     let date: Date
     let exercises: [ExerciseEntry]
