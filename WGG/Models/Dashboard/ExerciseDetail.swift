@@ -8,7 +8,7 @@
 import Foundation
 internal import Combine
 
-class Exercise: Identifiable, ObservableObject {
+class ExerciseDetail: Identifiable, ObservableObject {
     let id = UUID()
     
     let name: String

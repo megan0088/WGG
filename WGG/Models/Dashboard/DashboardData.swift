@@ -76,12 +76,12 @@ struct DashboardData {
         return all
     }
     
-    static func makeSession(title: String, date: Date, exercises: [Exercise]) -> WorkoutSession {
+    static func makeSession(title: String, date: Date, exercises: [ExerciseDetail]) -> WorkoutSession {
         WorkoutSession(title: title, date: date, exercises: exercises)
     }
     
-    static func makeExercise(_ name: String, _ muscle: String, base: Double) -> Exercise {
-        Exercise(
+    static func makeExercise(_ name: String, _ muscle: String, base: Double) -> ExerciseDetail {
+        ExerciseDetail(
             name: name,
             muscle: muscle,
             sets: [

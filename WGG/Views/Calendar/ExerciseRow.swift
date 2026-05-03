@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExerciseRow: View {
-    let exercise: Exercise
+    let exercise: ExerciseDetail
     @State private var isCollapsed = false
     
     var body: some View {
@@ -109,7 +109,7 @@ struct ExerciseRow: View {
     }
 
     // get durasi dan rest time formatted
-    func getSessionTimeStats(_ exercises: [Exercise]) -> (total: String, rest: String) {
+    func getSessionTimeStats(_ exercises: [ExerciseDetail]) -> (total: String, rest: String) {
         let exerciseMinutes = exercises.reduce(0) { $0 + $1.duration }
         let totalRestSeconds = exercises.reduce(0) { exSum, ex in
             exSum + ex.sets.reduce(0) { $0 + $1.rest }
@@ -127,7 +127,7 @@ struct ExerciseRow: View {
 
 #Preview {
     ExerciseRow(
-        exercise: Exercise(name: "Test", muscle: "Leg", sets: [
+        exercise: ExerciseDetail(name: "Test", muscle: "Leg", sets: [
             ExerciseSet(reps: 8, weight: 30, rest: 50),
             ExerciseSet(reps: 8, weight: 40, rest: 100)
         ], duration: 20)

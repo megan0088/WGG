@@ -84,7 +84,7 @@ struct SessionCard: View {
 
 #Preview {
     SessionCard(session: WorkoutSession(title: "Test day", date: Date(), exercises: [
-        Exercise(
+        ExerciseDetail(
             name: "Tes exercise",
             muscle: "Back",
             sets: [

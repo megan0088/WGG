@@ -12,9 +12,9 @@ class WorkoutSession: Identifiable {
     
     let title: String
     let date: Date
-    var exercises: [Exercise]
+    var exercises: [ExerciseDetail]
     
-    init(title: String, date: Date, exercises: [Exercise]) {
+    init(title: String, date: Date, exercises: [ExerciseDetail]) {
         self.title = title
         self.date = date
         self.exercises = exercises
