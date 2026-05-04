@@ -15,7 +15,7 @@ struct DashboardView: View {
             ZStack {
                 Color(#colorLiteral(red: 0.03797435388, green: 0.03797435015, blue: 0.03797435015, alpha: 1)).ignoresSafeArea()
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     
                     VStack(alignment: .leading, spacing: 22) {
                         PageTitle(title: "Home")

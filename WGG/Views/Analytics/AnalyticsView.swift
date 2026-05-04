@@ -94,7 +94,7 @@ struct AnalyticsView: View {
                             .bold()
                             .foregroundColor(.primaryText)
                     }
-                    .padding()
+                    .padding(.horizontal)
                     
                     // MARK: Time Range Picker
                     CustomSegmentedPicker(selectedTime: $selectedTime)
