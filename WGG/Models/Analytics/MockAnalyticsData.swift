@@ -106,6 +106,14 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 3, reps: 10, weight: 55),
                 WorkoutSet(setNumber: 4, reps: 12, weight: 57.5),
             ])
+        ]),
+        WorkoutSession2(date: createDate(day: 29, month: 4, year: 2026), exercises: [
+            ExerciseEntry(exerciseName: "Bench Press", sets: [
+                WorkoutSet(setNumber: 1, reps: 8, weight: 52.5),
+                WorkoutSet(setNumber: 2, reps: 10, weight: 55),
+                WorkoutSet(setNumber: 3, reps: 10, weight: 55),
+                WorkoutSet(setNumber: 4, reps: 14, weight: 57.5),
+            ])
         ])
     ]
 }

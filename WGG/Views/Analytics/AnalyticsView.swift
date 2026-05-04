@@ -157,7 +157,7 @@ struct AnalyticsView: View {
                     ChartCard(title: "VOLUME", data: volumeChartData, chartType: "Bar")
                         .padding(.vertical)
                     
-                    // MARK: Last Session
+                    // MARK: Last Session Card
                     VStack(alignment: .leading) {
                         Text("LAST SESSION (BENCHMARK)")
                             .bold()
@@ -183,6 +183,8 @@ struct AnalyticsView: View {
                             .foregroundStyle(Color.primaryText.opacity(0.5))
                             .padding(8)
                             .padding(.bottom, 8)
+                            
+                            // MARK: Last Session Table
                             VStack {
                                 Grid {
                                     Divider().background(Color.primaryText.opacity(0.5))

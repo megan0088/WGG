@@ -26,7 +26,17 @@ struct ChartCard: View {
                     Text("\(data.map({$0.y}).max() ?? 0, specifier: "%.1f") kg")
                         .foregroundStyle(Color.accent)
                         .fontWeight(.black)
-                    Text("+19%")
+                    
+                    let firstY: Double? = data.first?.y
+                    let lastY: Double? = data.last?.y
+                    var percentChange: String {
+                        guard let first = firstY, let last = lastY, first != 0 else { return "0" }
+                        let change = ((last - first)/first) * 100
+                        let formatted = String(format: "%.0f", change)
+                        return change >= 0 ? "+" + formatted : formatted
+                    }
+                    
+                    Text("\(percentChange)%")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
