@@ -189,7 +189,7 @@ struct AnalyticsView: View {
                                     let relativeTime = lastDate.formatted(.relative(presentation: .numeric))
                                     Text("\(exactDate) (\(relativeTime))")
                                 } else {
-                                    Text("-")
+                                    Text("Date: -")
                                 }
                                 Spacer()
                                 if let totalSets = lastSession?.entry.sets.last?.setNumber {
@@ -236,6 +236,7 @@ struct AnalyticsView: View {
                                     else {
                                         GridRow {
                                             Text("No Data")
+                                                .foregroundStyle(Color.primaryText.opacity(0.5))
                                                 .gridCellColumns(3)
                                                 .padding(.vertical, 32)
                                         }

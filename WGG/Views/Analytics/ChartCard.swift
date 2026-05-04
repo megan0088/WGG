@@ -13,6 +13,8 @@ struct ChartCard: View {
     let data: [ChartData]
     let chartType: String
     
+    @State private var selectedDate: String?
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -48,45 +50,91 @@ struct ChartCard: View {
             }
             .padding(.bottom)
             
-            Chart {
-                ForEach(data) { item in
-                    let dateString = item.x.formatted(.dateTime.day(.twoDigits).month(.twoDigits))
+            if data.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: chartType == "Line" ? "chart.xyaxis.line" : "chart.bar.fill")
+                        .font(.title2)
+                    Text("Not enough data")
+                }
+                .foregroundStyle(Color.primaryText.opacity(0.5))
+                .frame(maxWidth: .infinity)
+                .frame(height: 200)
+            }
+            else {
+                Chart {
+                    ForEach(data) { item in
+                        let dateString = item.x.formatted(.dateTime.day(.twoDigits).month(.twoDigits))
+                        
+                        if (chartType == "Line") {
+                            LineMark(
+                                x: .value("Date", dateString),
+                                y: .value("Max Weight", item.y)
+                            )
+                            .foregroundStyle(Color.accent)
+                            
+                            PointMark(
+                                x: .value("Date", dateString),
+                                y: .value("Max Weight", item.y)
+                            )
+                            .foregroundStyle(Color.accent)
+                        }
+                        else if (chartType == "Bar") {
+                            BarMark(
+                                x: .value("Date", dateString),
+                                y: .value("Max Weight", item.y),
+                                width: .ratio(0.8)
+                            )
+                            .foregroundStyle(item.id == data.last?.id ? Color.accent : Color(red: 42/255, green: 42/255, blue: 42/255))
+                            .cornerRadius(4)
+                        }
+                    }
                     
-                    if (chartType == "Line") {
-                        LineMark(
-                            x: .value("Date", dateString),
-                            y: .value("Max Weight", item.y)
+                    if let selectedDate, let selectedItem = data.first(where: { $0.x.formatted(.dateTime.day(.twoDigits).month(.twoDigits)) == selectedDate}) {
+                        RuleMark(
+                            x: .value("Date", selectedDate)
                         )
-                        .foregroundStyle(Color.accent)
+                        .lineStyle(StrokeStyle(lineWidth: 1.5))
+                        .foregroundStyle(Color.primaryText)
                         
                         PointMark(
-                            x: .value("Date", dateString),
-                            y: .value("Max Weight", item.y)
+                            x: .value("Date", selectedDate),
+                            y: .value("Max Weight", selectedItem.y)
                         )
                         .foregroundStyle(Color.accent)
-                    }
-                    else if (chartType == "Bar") {
-                        BarMark(
-                            x: .value("Date", dateString),
-                            y: .value("Max Weight", item.y),
-                            width: .ratio(0.8)
-                        )
-                        .foregroundStyle(item.id == data.last?.id ? Color.accent : Color(red: 42/255, green: 42/255, blue: 42/255))
-                        .cornerRadius(4)
+                        .annotation(position: .top, spacing: 0, overflowResolution: .init(x: .fit, y: .disabled)) {
+                            VStack {
+                                Text(selectedItem.x.formatted(.dateTime.month(.abbreviated).day()))
+                                    .font(.caption)
+                                    .foregroundStyle(Color.brandSecondary)
+                                Text("\(selectedItem.y, specifier: "%.1f") kg")
+                                    .font(.subheadline)
+                                    .fontWeight(.black)
+                                    .foregroundStyle(Color.accent)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.card)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.primaryText.opacity(0.1), lineWidth: 1)
+                            )
+                        }
                     }
                 }
-            }
-            .frame(height: 200)
-            .chartYAxis {
-                AxisMarks(position: .leading) {
-                    AxisGridLine(stroke: StrokeStyle(lineWidth: 1, dash: [8, 4])).foregroundStyle(Color.primaryText.opacity(0.125))
-                    AxisValueLabel().foregroundStyle(Color.primaryText.opacity(0.5))
+                .frame(height: 200)
+                .chartXSelection(value: $selectedDate)
+                .chartYAxis {
+                    AxisMarks(position: .leading) {
+                        AxisGridLine(stroke: StrokeStyle(lineWidth: 1, dash: [8, 4])).foregroundStyle(Color.primaryText.opacity(0.125))
+                        AxisValueLabel().foregroundStyle(Color.primaryText.opacity(0.5))
+                    }
                 }
-            }
-            .chartXAxis {
-                AxisMarks {
-                    AxisValueLabel()
-                        .foregroundStyle(Color.primaryText.opacity(0.5))
+                .chartXAxis {
+                    AxisMarks {
+                        AxisValueLabel()
+                            .foregroundStyle(Color.primaryText.opacity(0.5))
+                    }
                 }
             }
         }
