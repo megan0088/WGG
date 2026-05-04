@@ -110,6 +110,7 @@ struct AnalyticsView: View {
                         HStack {
                             Text(selectedExercise)
                                 .fontWeight(.bold)
+                                .font(.headline)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
                                 .opacity(0.5)
@@ -125,8 +126,8 @@ struct AnalyticsView: View {
                     // MARK: Info Cards
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("BEST SET")
-                                .font(.caption)
+                            Text("Best Set")
+                                .font(.subheadline)
                                 .foregroundColor(.primaryText.opacity(0.5))
                             Text("\(bestSet.weight, specifier: "%.1f") kg x \(bestSet.reps)")
                                 .font(.title2)
@@ -134,7 +135,7 @@ struct AnalyticsView: View {
                                 .bold()
                                 .padding(.vertical, 1)
                             Text(bestSet.date.formatted(.dateTime.month(.abbreviated).day()))
-                                .font(.subheadline)
+                                .font(.caption)
                                 .foregroundColor(.primaryText)
                                 .opacity(0.5)
                         }
@@ -144,8 +145,8 @@ struct AnalyticsView: View {
                         .cornerRadius(15)
 
                         VStack(alignment: .leading) {
-                            Text("TOTAL SESSION")
-                                .font(.caption)
+                            Text("Total Session")
+                                .font(.subheadline)
                                 .foregroundColor(.primaryText.opacity(0.5))
                             Text("\(totalSession)")
                                 .font(.title2)
@@ -153,7 +154,7 @@ struct AnalyticsView: View {
                                 .bold()
                                 .padding(.vertical, 1)
                             Text("Last: \(lastSession?.date.formatted(.dateTime.month(.abbreviated).day()) ?? "-")")
-                                .font(.subheadline)
+                                .font(.caption)
                                 .foregroundColor(.primaryText)
                                 .opacity(0.5)
                         }
@@ -166,19 +167,19 @@ struct AnalyticsView: View {
                     .padding(.horizontal)
                     
                     // MARK: Estimated 1RM Chart
-                    ChartCard(title: "ESTIMATED 1RM", data: estimated1RMChartData, chartType: "Line")
+                    ChartCard(title: "Estimated 1RM", data: estimated1RMChartData, chartType: "Line")
                         .padding(.vertical)
                     
                     // MARK: Max Weight Chart
-                    ChartCard(title: "MAX WEIGHT", data: maxWeightChartData, chartType: "Bar")
+                    ChartCard(title: "Max Weight", data: maxWeightChartData, chartType: "Bar")
                     
                     // MARK: Volume Chart
-                    ChartCard(title: "VOLUME", data: volumeChartData, chartType: "Bar")
+                    ChartCard(title: "Volume", data: volumeChartData, chartType: "Bar")
                         .padding(.vertical)
                     
                     // MARK: Last Session Card
                     VStack(alignment: .leading) {
-                        Text("LAST SESSION (BENCHMARK)")
+                        Text("Last Session (Benchmark)")
                             .bold()
                             .foregroundStyle(Color.primaryText.opacity(0.5))
                         
