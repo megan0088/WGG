@@ -20,7 +20,7 @@ struct DashboardView: View {
                     VStack(spacing: 22) {
                         VStack {
                             Text("Hello, ")
-                                .foregroundStyle(Color("Secondary"))
+                                .foregroundStyle(Color("BrandSecondary"))
                             Text("Gym Goer")
                                 .foregroundStyle(.white)
                                 .fontWeight(.semibold)

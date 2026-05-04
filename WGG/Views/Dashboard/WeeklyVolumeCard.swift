@@ -41,7 +41,7 @@ struct WeeklyVolumeCard: View {
                 
                 Text(" kg this week")
                     .font(.subheadline)
-                    .foregroundStyle(Color("Secondary"))
+                    .foregroundStyle(Color("BrandSecondary"))
                 
             }
             
@@ -90,7 +90,7 @@ struct WeeklyVolumeCard: View {
                         // hari
                         Text(dayLabel(i))
                             .font(.caption2)
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, 26)

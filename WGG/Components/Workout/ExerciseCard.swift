@@ -20,7 +20,7 @@ struct ExerciseCard: View {
             Image(systemName: "dumbbell.fill")
                 .foregroundStyle(exercise.themeColor)
                 .frame(width: 40, height: 40)
-                .background(exercise.themeColor.opacity(0.5))
+                .background(exercise.themeColor.opacity(0.133))
                 .cornerRadius(8)
             
             VStack (alignment: .leading, spacing: 6) {

@@ -28,7 +28,7 @@ struct RecentPRsCard: View {
                                 
                                 HStack {
                                     Text("\(pr.diff > 0 ? "+" : "")\(Int(pr.diff)) kg")
-                                        .foregroundColor(pr.diff >= 0 ? Color.accent : Color(#colorLiteral(red: 1, green: 0.1491003036, blue: 0, alpha: 1)))
+                                        .foregroundColor(pr.diff >= 0 ? Color.accent : Color.red)
                                         .font(.subheadline)
                                         .fontWeight(.bold)
                                     Spacer()
@@ -50,12 +50,12 @@ struct RecentPRsCard: View {
                                 
                                 Text("\(pr.daysAgo) days ago")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                         }
                         .padding()
                         .frame(width: 180)
-                        .background(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                        .background(Color("Card"))
                         .cornerRadius(12)
                     }
                 }

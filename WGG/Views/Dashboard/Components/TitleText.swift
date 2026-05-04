@@ -14,7 +14,7 @@ struct TitleText: View {
         Text(text)
             .font(.subheadline)
             .fontWeight(.bold)
-            .foregroundStyle(Color("Secondary"))
+            .foregroundStyle(Color("BrandSecondary"))
             .textCase(isUpper ? .uppercase : .none)
     }
 }

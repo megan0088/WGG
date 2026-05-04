@@ -32,14 +32,14 @@ struct ExerciseRow: View {
                         
                         Text("\(timeStats.total) (rest: \(timeStats.rest))")
                             .font(.system(size: 10))
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                     
                     Spacer()
                     
                     Image(systemName: "pencil")
                         .font(.subheadline)
-                        .foregroundStyle(Color("Secondary"))
+                        .foregroundStyle(Color("BrandSecondary"))
                 }
                 .padding(12)
                 .background(Color(#colorLiteral(red: 0.1462407112, green: 0.1462407112, blue: 0.1462407112, alpha: 1)))
@@ -59,7 +59,7 @@ struct ExerciseRow: View {
                         Text("Rest").frame(width: 45, alignment: .trailing)
                     }
                     .font(.system(size: 10, weight: .bold))
-                    .foregroundStyle(Color("Secondary"))
+                    .foregroundStyle(Color("BrandSecondary"))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(Color(#colorLiteral(red: 0.1242692545, green: 0.1242692545, blue: 0.1242692545, alpha: 1)))
@@ -72,7 +72,7 @@ struct ExerciseRow: View {
                                 // Kolom Set
                                 Text("\(index + 1)")
                                     .frame(width: 35, alignment: .leading)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                                 
                                 Spacer()
                                 

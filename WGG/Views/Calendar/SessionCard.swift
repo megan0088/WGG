@@ -33,36 +33,36 @@ struct SessionCard: View {
                         HStack(spacing: 16) {
                             HStack(spacing: 6) {
                                 Image(systemName: "dumbbell")
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
                                 Text("\(session.exercises.count) Exercises")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                             
                             HStack(spacing: 6) {
                                 Image(systemName: "figure.strengthtraining.traditional")
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
                                 Text("\(session.exercises.count) kg")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                             
                             HStack(spacing: 6) {
                                 Image(systemName: "clock")
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
                                 Text("\(session.exercises.count) (rest: 60m)")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                         }
                     }
                     Spacer()
                     Image(systemName: "chevron.down")
                         .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                        .foregroundStyle(Color("Secondary"))
+                        .foregroundStyle(Color("BrandSecondary"))
                 }
             }
             

@@ -89,28 +89,28 @@ struct CalendarView: View {
                         Text("Sessions")
                             .font(.caption)
                             .fontWeight(.regular)
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                     Divider()
                             .frame(height: 64)
-                            .background(Color("Secondary"))
+                            .background(Color("BrandSecondary"))
                     
                     VStack(spacing: 8) {
                         Text(totalVolume)
                         Text("kg total")
                             .font(.caption)
                             .fontWeight(.regular)
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                     Divider()
                             .frame(height: 64)
-                            .background(Color("Secondary"))
+                            .background(Color("BrandSecondary"))
                     VStack(spacing: 8) {
                         Text(avgDuration)
                         Text("avg session")
                             .font(.caption)
                             .fontWeight(.regular)
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                 }
                 .padding(.horizontal, 36)
@@ -129,7 +129,7 @@ struct CalendarView: View {
                             Text(day)
                                 .font(.caption)
                                 .fontWeight(.bold)
-                                .foregroundStyle(Color("Secondary"))
+                                .foregroundStyle(Color("BrandSecondary"))
                                 .frame(maxWidth: .infinity)
                         }
                     }

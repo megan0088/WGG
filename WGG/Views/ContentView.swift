@@ -30,7 +30,7 @@ struct ContentView: View {
                     Label("Analytics", systemImage: "chart.bar.fill")
                 }
         }
-        .tint(Color.brandAccent)
+        .tint(.accent)
     }
 }
 

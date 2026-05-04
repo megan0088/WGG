@@ -34,7 +34,7 @@ struct WeekStreak: View {
                         
                         Image(systemName: "chevron.right")
                             .font(.subheadline)
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
                     
                     // calendar
@@ -53,7 +53,7 @@ struct WeekStreak: View {
                                 Text(dayString(from: date))
                                     .font(.caption)
                                     .fontWeight(.medium)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                                 
                                 // tanggal
                                 ZStack {
@@ -106,7 +106,7 @@ struct WeekStreak: View {
                                     .foregroundStyle(.white)
                                 Text("current streak")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                         }
                         
@@ -123,7 +123,7 @@ struct WeekStreak: View {
                                     .foregroundStyle(.white)
                                 Text("minutes")
                                     .font(.caption)
-                                    .foregroundStyle(Color("Secondary"))
+                                    .foregroundStyle(Color("BrandSecondary"))
                             }
                         }
                     }

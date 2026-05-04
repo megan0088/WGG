@@ -68,13 +68,13 @@ struct MuscleFocusCard: View {
                                 .frame(width: 8, height: 8)
                             
                             Text(item.0)
-                                .foregroundStyle(Color("Secondary"))
+                                .foregroundStyle(Color("BrandSecondary"))
                                 .font(.subheadline)
                             
                             Spacer()
                             
                             Text("\(Int(item.1))%")
-                                .foregroundStyle(Color("Secondary"))
+                                .foregroundStyle(Color("BrandSecondary"))
                         }
                     }
                 }

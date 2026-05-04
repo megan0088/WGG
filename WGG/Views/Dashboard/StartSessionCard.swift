@@ -56,7 +56,7 @@ struct StartSessionCard: View {
                             .fontWeight(.bold)
                             .font(.title2)
                         Text("Duration")
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                             .font(.caption)
                     }
                     
@@ -66,7 +66,7 @@ struct StartSessionCard: View {
                             .fontWeight(.bold)
                             .font(.title2)
                         Text("Sets")
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                             .font(.caption)
                     }
                     
@@ -76,7 +76,7 @@ struct StartSessionCard: View {
                             .fontWeight(.bold)
                             .font(.title2)
                         Text("Volume")
-                            .foregroundStyle(Color("Secondary"))
+                            .foregroundStyle(Color("BrandSecondary"))
                             .font(.caption)
                     }
                     
