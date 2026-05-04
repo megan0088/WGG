@@ -12,7 +12,7 @@ struct StartSessionCard: View {
     var body: some View {
         // tombol start session
         ZStack {
-            Button(action: {}) {
+            NavigationLink(destination: WorkoutView()) {
                 HStack {
                     Text("Start Today's Session")
                         .fontWeight(.bold)
@@ -27,9 +27,6 @@ struct StartSessionCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             }
         }
-        .frame(maxWidth: .infinity)
-        .padding(16)
-        .background(Color("Accent").opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         
         // MARK: last session summary
@@ -39,7 +36,7 @@ struct StartSessionCard: View {
                     Image(systemName: "checkmark.circle")
                         .foregroundStyle(Color.accent)
                         .font(.headline)
-                    Text("Last Session")
+                    Text("Session Complete")
                         .font(.headline)
                         .foregroundColor(Color.accent)
                 }
@@ -51,7 +48,7 @@ struct StartSessionCard: View {
                 
                 HStack(spacing: 16) {
                     VStack (alignment: .leading) {
-                        Text("\(DashboardData.totalDuration(session: last))m")
+                        Text("\(minToHourMin(minutes: DashboardData.totalDuration(session: last)))")
                             .foregroundStyle(Color.accent)
                             .fontWeight(.bold)
                             .font(.title2)
@@ -86,14 +83,25 @@ struct StartSessionCard: View {
             }
             .frame(maxWidth: .infinity)
             .padding(18)
-            .background(Color("Accent").opacity(0.15))
+            .background(Color(#colorLiteral(red: 0.05331161618, green: 0.1584380567, blue: 0.05793306977, alpha: 1)))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.accent, lineWidth: 1)
+                    .stroke(Color.accent.opacity(0.3), lineWidth: 2.76)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         
+    }
+    
+    // MARK: Minute to Hour minute
+    func minToHourMin(minutes: Int) -> String {
+        if(minutes <= 60) {
+            return "\(minutes)m"
+        }
+        let hour: Int = minutes / 60
+        let min: Int = minutes % 60
+        
+        return "\(hour)h \(min)m"
     }
 }
 

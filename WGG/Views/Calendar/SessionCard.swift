@@ -12,9 +12,17 @@ struct SessionCard: View {
     @State private var isExpanded = false 
     
     var totalVolume: Double {
-        session.exercises.reduce(0) { exSum, ex in
-            exSum + ex.sets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+        session.exercises.reduce(0) { total, exercise in
+            total + exercise.sets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
         }
+    }
+    
+    var totalDuration: Int {
+        session.exercises.reduce(0) { $0 + $1.duration }
+    }
+    
+    var totalRest: Int {
+        session.exercises.flatMap { $0.sets }.reduce(0) { $0 + $1.rest }
     }
     
     var body: some View {
@@ -44,7 +52,7 @@ struct SessionCard: View {
                                 Image(systemName: "figure.strengthtraining.traditional")
                                     .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
-                                Text("\(session.exercises.count) kg")
+                                Text("\(Int(totalVolume)) kg")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
                             }
@@ -53,7 +61,7 @@ struct SessionCard: View {
                                 Image(systemName: "clock")
                                     .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
-                                Text("\(session.exercises.count) (rest: 60m)")
+                                Text("\(totalDuration)m (rest: \(minToMinSec(minutes: totalRest)))")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
                             }
@@ -79,6 +87,16 @@ struct SessionCard: View {
         .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal)
+    }
+    
+    func minToMinSec(minutes: Int) -> String {
+        if minutes < 60 {
+            return "\(minutes) min"
+        }
+        
+        let min = minutes / 60
+        let sec = minutes % 60
+        return "\(min)m \(sec)s"
     }
 }
 

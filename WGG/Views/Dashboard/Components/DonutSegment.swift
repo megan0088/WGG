@@ -12,10 +12,9 @@ struct DonutSegment: Shape {
     var endAngle: Double
     
     func path(in rect: CGRect) -> Path {
+        var path = Path()
         let center = CGPoint(x: rect.midX, y: rect.midY)
         let radius = min(rect.width, rect.height) / 2
-        
-        var path = Path()
         
         path.addArc(
             center: center,
@@ -24,10 +23,7 @@ struct DonutSegment: Shape {
             endAngle: .degrees(endAngle),
             clockwise: false
         )
-        
-        return path.strokedPath(
-            StrokeStyle(lineWidth: 8, lineCap: .butt)
-        )
+        return path
     }
 }
 

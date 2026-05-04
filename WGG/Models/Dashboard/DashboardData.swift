@@ -212,25 +212,28 @@ struct DashboardData {
         return dict.mapValues { ($0 / total) * 100 }
     }
     
-    // MARK: - PR
-    static var prs: [PR] {
+    // MARK: - recent PRs
+    static var recentPRRecords: [(name: String, weight: Double, diff: Double, daysAgo: Int)] {
+        let allExerciseNames = Set(sessions.flatMap { $0.exercises.map { $0.name } })
         
-        var best: [String: Double] = [:]
-        
-        for session in sessions {
-            for ex in session.exercises {
-                let maxWeight = ex.sets.map { $0.weight }.max() ?? 0
-                best[ex.name] = max(best[ex.name] ?? 0, maxWeight)
+        return allExerciseNames.compactMap { name in
+            // 1. Ambil semua set dan tanggal sesi untuk exercise ini
+            let exerciseOccurrences = sessions.flatMap { session in
+                session.exercises
+                    .filter { $0.name == name }
+                    .map { (date: session.date, weights: $0.sets.map { $0.weight }) }
             }
-        }
-        
-        return best.map {
-            PR(
-                name: $0.key,
-                daysAgo: Int.random(in: 1...14),
-                weight: $0.value,
-                diff: Double.random(in: -5...10)
-            )
+            
+            // 2. Dapatkan semua list berat badan dan urutkan untuk cari 2 terbaik
+            let allWeights = exerciseOccurrences.flatMap { $0.weights }.sorted(by: >)
+            guard let best = allWeights.first else { return nil }
+            let secondBest = allWeights.count > 1 ? allWeights[1] : best
+            
+            // 3. Cari tanggal terbaru exercise ini dilakukan untuk 'daysAgo'
+            let latestDate = exerciseOccurrences.map { $0.date }.max() ?? Date()
+            let diffDays = calendar.dateComponents([.day], from: latestDate, to: Date()).day ?? 0
+            
+            return (name: name, weight: best, diff: best - secondBest, daysAgo: abs(diffDays))
         }
     }
 }

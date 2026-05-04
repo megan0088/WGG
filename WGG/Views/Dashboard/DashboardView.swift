@@ -17,15 +17,8 @@ struct DashboardView: View {
                 
                 ScrollView {
                     
-                    VStack(spacing: 22) {
-                        VStack {
-                            Text("Hello, ")
-                                .foregroundStyle(Color("BrandSecondary"))
-                            Text("Gym Goer")
-                                .foregroundStyle(.white)
-                                .fontWeight(.semibold)
-                        }
-                        .font(.caption)
+                    VStack(alignment: .leading, spacing: 22) {
+                        PageTitle(title: "Home")
                         
                         WeekStreak()
                         

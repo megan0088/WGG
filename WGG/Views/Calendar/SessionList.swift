@@ -18,20 +18,24 @@ struct SessionListView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 12) {
             if sessionsForDate.isEmpty {
-                ContentUnavailableView("No Workouts", systemImage: "dumbbell.fill")
-                    .foregroundStyle(.gray)
-                    .frame(height: 200)
-            } else {
-                ScrollView {
-                    ForEach(sessionsForDate) { session in
-                        SessionCard(session: session)
-                    }
+                VStack(spacing: 12) {
+                    Image(systemName: "dumbbell.fill")
+                        .font(.largeTitle)
+                    Text("No Workouts")
+                        .font(.headline)
                 }
-                .frame(minHeight: 200)
+                .foregroundStyle(.gray.opacity(0.5))
+                .padding(.top, 40)
+                .frame(maxWidth: .infinity)
+            } else {
+                ForEach(sessionsForDate) { session in
+                    SessionCard(session: session)
+                }
             }
         }
+        .padding(.bottom, 30)
     }
 }
 

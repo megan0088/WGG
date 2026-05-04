@@ -8,35 +8,32 @@
 import SwiftUI
 
 struct RecentPRsCard: View {
-    let prs = DashboardData.prs
+    let prs = DashboardData.recentPRRecords
     var body: some View {
         VStack(alignment: .leading) {
             TitleText(text: "RECENT PRs", isUpper: false)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(prs) { pr in
+                    ForEach(prs, id: \.name) { pr in
                         VStack(alignment: .leading, spacing: 10) {
                             HStack {
-                                if pr.diff > 0 {
-                                    Image(systemName: "trophy")
-                                        .foregroundStyle(Color.accent)
-                                        .font(.caption)
-                                        .padding(.trailing, 4)
-                                }
+                                Image(systemName: "trophy")
+                                    .foregroundStyle(Color.accent)
+                                    .font(.caption)
+                                    .padding(.trailing, 4)
+                            
                                 
                                 
                                 HStack {
-                                    Text("\(pr.diff > 0 ? "+" : "")\(Int(pr.diff)) kg")
-                                        .foregroundColor(pr.diff >= 0 ? Color.accent : Color.red)
-                                        .font(.subheadline)
-                                        .fontWeight(.bold)
-                                    Spacer()
                                     Text("\(Int(pr.weight)) kg")
                                         .font(.subheadline)
                                         .fontWeight(.bold)
-                                        .foregroundStyle(.white)
+                                    Text("+\(Int(pr.diff)) kg")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
                                 }
+                                .foregroundColor( Color("Accent"))
                                 
                                 Spacer()
                             }

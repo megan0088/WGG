@@ -80,7 +80,7 @@ struct WeeklyVolumeCard: View {
                         // bar
                         RoundedRectangle(cornerRadius: 6)
                             .fill(i == todayIndex() ? Color("Accent") : Color.gray.opacity(0.4))
-                            .frame(height: max(height/2, 4))
+                            .frame(height: height/2)
                             .onTapGesture {
                                 withAnimation(.easeInOut) {
                                     selectedIndex = (selectedIndex == i ? nil : i)
@@ -90,10 +90,12 @@ struct WeeklyVolumeCard: View {
                         // hari
                         Text(dayLabel(i))
                             .font(.caption2)
-                            .foregroundStyle(Color("BrandSecondary"))
+                            .foregroundStyle(i == todayIndex() ? Color("Accent") : Color("BrandSecondary"))
+                            .fontWeight(i == todayIndex() ? .semibold : .regular)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, 26)
+                    .padding(.top, 12)
                 }
             }
         }

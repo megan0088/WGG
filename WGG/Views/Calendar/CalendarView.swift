@@ -49,125 +49,130 @@ struct CalendarView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            VStack {
-                
-                // header
-                HStack {
-                    Button {
-                        currentMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth)!
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(Color(#colorLiteral(red: 0.6034177542, green: 0.6034177542, blue: 0.6034177542, alpha: 1)))
-                            .frame(width: 44, height: 44)
-                            .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
-                    }
-                    
-                    Spacer()
-                    
-                    Text(monthYearString(currentMonth))
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                        .fontWeight(.bold)
-                    
-                    Spacer()
-                    
-                    Button {
-                        currentMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth)!
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(Color(#colorLiteral(red: 0.6034177542, green: 0.6034177542, blue: 0.6034177542, alpha: 1)))
-                            .frame(width: 44, height: 44)
-                            .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
-                    }
-                }
-                .padding(.vertical)
-                
-                // stats
-                HStack(spacing: 28) {
-                    VStack(spacing: 8) {
-                        Text("\(filteredSessions.count)")
-                        Text("Sessions")
-                            .font(.caption)
-                            .fontWeight(.regular)
-                            .foregroundStyle(Color("BrandSecondary"))
-                    }
-                    Divider()
-                            .frame(height: 64)
-                            .background(Color("BrandSecondary"))
-                    
-                    VStack(spacing: 8) {
-                        Text(totalVolume)
-                        Text("kg total")
-                            .font(.caption)
-                            .fontWeight(.regular)
-                            .foregroundStyle(Color("BrandSecondary"))
-                    }
-                    Divider()
-                            .frame(height: 64)
-                            .background(Color("BrandSecondary"))
-                    VStack(spacing: 8) {
-                        Text(avgDuration)
-                        Text("avg session")
-                            .font(.caption)
-                            .fontWeight(.regular)
-                            .foregroundStyle(Color("BrandSecondary"))
-                    }
-                }
-                .padding(.horizontal, 36)
-                .padding(.vertical, 16)
-                .foregroundStyle(.white)
-                .fontWeight(.bold)
-                .font(.title2)
-                .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                
-                // grid
-                VStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 22) {
+                    // Header
                     HStack {
-                        let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-                        ForEach(weekdays, id: \.self) { day in
-                            Text(day)
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color("BrandSecondary"))
-                                .frame(maxWidth: .infinity)
+                        Button {
+                            currentMonth = calendar.date(byAdding: .month, value: -1, to: currentMonth)!
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .foregroundStyle(.white)
+                                .frame(width: 44, height: 44)
+                                .background(Color(white: 0.15))
+                                .clipShape(Circle())
                         }
+                        .buttonStyle(.plain)
+                        
+                        Spacer()
+                        
+                        Text(monthYearString(currentMonth))
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                        
+                        Button {
+                            currentMonth = calendar.date(byAdding: .month, value: 1, to: currentMonth)!
+                        } label: {
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.white)
+                                .frame(width: 44, height: 44)
+                                .background(Color(white: 0.15))
+                                .clipShape(Circle()) // Membuat tombol bulat
+                        }
+                        .buttonStyle(.plain)
                     }
                     .padding(.vertical)
                     
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)) {
+                    // stats
+                    HStack(spacing: 28) {
+                        VStack(spacing: 8) {
+                            Text("\(filteredSessions.count)")
+                            Text("Sessions")
+                                .font(.caption)
+                                .fontWeight(.regular)
+                                .foregroundStyle(Color("BrandSecondary"))
+                        }
+                        Divider()
+                                .frame(height: 64)
+                                .background(Color("BrandSecondary"))
                         
-                        ForEach(daysInMonth(), id: \.self) { date in
-                            
-                            if let date = date {
-                                let sessionForDate = DashboardData.sessions.first {
-                                        calendar.isDate($0.date, inSameDayAs: date)
-                                    }
-                                DayCell(
-                                    date: date,
-                                    isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
-                                    hasWorkout: sessionForDate != nil,
-                                    workoutTitle: sessionForDate?.title
-                                )
-                                .onTapGesture {
-                                    selectedDate = date
-                                }
-                            } else {
-                                Color.clear.frame(height: 40)
-                            }
+                        VStack(spacing: 8) {
+                            Text(totalVolume)
+                            Text("kg total")
+                                .font(.caption)
+                                .fontWeight(.regular)
+                                .foregroundStyle(Color("BrandSecondary"))
+                        }
+                        Divider()
+                                .frame(height: 64)
+                                .background(Color("BrandSecondary"))
+                        VStack(spacing: 8) {
+                            Text(avgDuration)
+                            Text("avg session")
+                                .font(.caption)
+                                .fontWeight(.regular)
+                                .foregroundStyle(Color("BrandSecondary"))
                         }
                     }
+                    .padding(.horizontal, 36)
+                    .padding(.vertical, 16)
+                    .foregroundStyle(.white)
+                    .fontWeight(.bold)
+                    .font(.title2)
+                    .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    
+                    // kalender
+                    VStack {
+                        // day header
+                        HStack {
+                            let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                            ForEach(weekdays, id: \.self) { day in
+                                Text(day)
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color("BrandSecondary"))
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                        .padding(.vertical, 8)
+
+                        // grid
+                        ZStack(alignment: .top) {
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
+                                let days = daysInMonth()
+                                ForEach(0..<days.count, id: \.self) { index in
+                                    if let date = days[index] {
+                                        let sessionForDate = DashboardData.sessions.first {
+                                            calendar.isDate($0.date, inSameDayAs: date)
+                                        }
+                                        DayCell(
+                                            date: date,
+                                            isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
+                                            hasWorkout: sessionForDate != nil
+                                        )
+                                        .onTapGesture {
+                                            selectedDate = date
+                                        }
+                                    } else {
+                                        Color.clear.frame(height: 52)
+                                    }
+                                }
+                            }
+                        }
+                        .frame(height: 340)
+                    }
+
+                    // List Session
+                    SessionListView(date: selectedDate)
                 }
-                
-                // all session 1 day
-                SessionListView(date: selectedDate)
-                
+                .padding(.horizontal)
             }
-            .padding()
-            .padding(.top, 32)
-            .background(Color.black)
         }
-        }
+    }
         
     // format bulan tahun
     func monthYearString(_ date: Date) -> String {

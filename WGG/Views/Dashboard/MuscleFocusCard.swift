@@ -8,104 +8,87 @@
 import SwiftUI
 
 struct MuscleFocusCard: View {
-    
     let rawData = DashboardData.muscleFocus
-    
-    // default muscle list
     let defaultMuscles = ["Back", "Chest", "Leg", "Shoulder", "Arm"]
     
-    var isEmpty: Bool {
-        rawData.isEmpty
+    var displayData: [(name: String, value: Double)] {
+        defaultMuscles.map { ($0, rawData[$0] ?? 0) }
     }
     
-    var data: [(String, Double)] {
-        defaultMuscles.map { muscle in
-            (muscle, rawData[muscle] ?? 0)
-        }
-    }
-    
-    var chartData: [(String, Double)] {
-        data.filter {$0.1 > 0}
+    // Data untuk chart (> 0%)
+    var chartData: [(name: String, value: Double)] {
+        displayData.filter { $0.value > 0 }
     }
     
     var body: some View {
-        
         VStack(alignment: .leading, spacing: 16) {
-            TitleText(text: "Muscle Focus this month", isUpper: true)
+            TitleText(text: "Muscle Focus This Month", isUpper: true)
+            
             HStack(spacing: 32) {
-                
-                // chart
+                // MARK: - Chart
                 ZStack {
-                    
-                    if isEmpty {
+                    if chartData.isEmpty {
                         Circle()
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 12)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 20)
                     } else {
                         ForEach(Array(chartData.enumerated()), id: \.offset) { index, item in
+                            let start = getAngle(for: index)
+                            let end = getAngle(for: index + 1)
                             
-                            let start = startAngle(for: index)
-                            let end = endAngle(for: index)
-                            
+                            // Segmen Warna
                             DonutSegment(startAngle: start, endAngle: end)
-                                .stroke(
-                                    color(for: item.0),
-                                    style: StrokeStyle(lineWidth: 12, lineCap: .round)
-                                )
+                                .stroke(color(for: item.name), style: StrokeStyle(lineWidth: 20, lineCap: .butt))
                             
+                            // gap
+                            DonutSegment(startAngle: end - 1, endAngle: end + 1)
+                                .stroke(Color("Card"), style: StrokeStyle(lineWidth: 20, lineCap: .butt))
                         }
                     }
                 }
-                .frame(width: 120, height: 120)
+                .frame(width: 110, height: 110)
+                .rotationEffect(.degrees(-90))
                 
-                // legend
+                // MARK: - Legend
                 VStack(alignment: .leading, spacing: 10) {
-                    
-                    ForEach(data, id: \.0) { item in
-                        HStack {
-                            
+                    ForEach(displayData, id: \.name) { item in
+                        HStack(spacing: 8) {
                             Circle()
-                                .fill(color(for: item.0))
+                                .fill(color(for: item.name))
                                 .frame(width: 8, height: 8)
                             
-                            Text(item.0)
-                                .foregroundStyle(Color("BrandSecondary"))
+                            Text(item.name)
                                 .font(.subheadline)
+                                .foregroundStyle(.white.opacity(0.7))
                             
                             Spacer()
                             
-                            Text("\(Int(item.1))%")
-                                .foregroundStyle(Color("BrandSecondary"))
+                            Text("\(Int(item.value))%")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.white)
                         }
                     }
                 }
             }
             .padding(24)
-            .background(Color(#colorLiteral(red: 0.07843137255, green: 0.07843137255, blue: 0.07843137255, alpha: 1)))
+            .background(Color("Card"))
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
     }
     
-    // MARK: - Angles
-    
-    func startAngle(for index: Int) -> Double {
-        let prev = chartData.prefix(index).reduce(0) { $0 + $1.1 }
-        return (prev / 100) * 360 - 90 + 7
+    func getAngle(for index: Int) -> Double {
+        let totalProgress = chartData.prefix(index).reduce(0) { $0 + $1.value }
+        return (totalProgress / 100) * 360
     }
     
-    func endAngle(for index: Int) -> Double {
-        let sum = chartData.prefix(index + 1).reduce(0) { $0 + $1.1 }
-        return (sum / 100) * 360 - 90 - 7
-    }
-    
-    // MARK: Map color
-    
+    // mapping
     func color(for muscle: String) -> Color {
         switch muscle {
-        case "Back": return .back
-        case "Chest": return .chest
-        case "Leg": return .leg
-        case "Shoulder": return .shoulder
-        case "Arm": return .arm
+        case "Back": return .blue
+        case "Chest": return .red
+        case "Leg": return .green
+        case "Shoulder": return .orange
+        case "Arm": return .purple
         default: return .gray
         }
     }

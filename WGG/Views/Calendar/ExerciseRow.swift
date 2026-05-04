@@ -18,7 +18,7 @@ struct ExerciseRow: View {
                 withAnimation(.easeInOut(duration: 0.2)) { isCollapsed.toggle() }
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: "square.fill")
+                    Image(systemName: "circle.fill")
                         .font(.system(size: 8))
                         .foregroundStyle(Color("Accent"))
                         
@@ -55,8 +55,6 @@ struct ExerciseRow: View {
                         Text("Reps").frame(width: 45, alignment: .center)
                         Spacer()
                         Text("Weight").frame(width: 65, alignment: .center)
-                        Spacer()
-                        Text("Rest").frame(width: 45, alignment: .trailing)
                     }
                     .font(.system(size: 10, weight: .bold))
                     .foregroundStyle(Color("BrandSecondary"))
@@ -87,15 +85,8 @@ struct ExerciseRow: View {
                                 Text("\(Int(set.weight))kg")
                                     .frame(width: 65, alignment: .center)
                                     .foregroundStyle(Color("Accent"))
-                                
-                                Spacer()
-                                
-                                // Kolom Rest
-                                Text("\(set.rest)s")
-                                    .frame(width: 45, alignment: .trailing)
-                                    .foregroundStyle(.white)
                             }
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .font(.system(size: 12, weight: .medium))
                         }
                     }
                     .padding(.horizontal, 16)

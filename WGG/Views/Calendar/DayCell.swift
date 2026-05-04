@@ -11,13 +11,14 @@ struct DayCell: View {
     let date: Date
     let isSelected: Bool
     let hasWorkout: Bool
-    let workoutTitle: String?
+    let calendar = Calendar.current
     
     var body: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             ZStack {
+                // Background bulat saat dipilih
                 if isSelected {
-                    Rectangle()
+                    Circle()
                         .fill(Color("Accent"))
                         .frame(width: 36, height: 36)
                 }
@@ -26,29 +27,17 @@ struct DayCell: View {
                     .fontWeight(isSelected ? .bold : (hasWorkout ? .semibold : .regular))
                     .foregroundStyle(isSelected ? .black : (hasWorkout ? .white : .gray))
             }
-            .frame(height: 30)
+            .frame(width: 36, height: 36)
             
-            Text(getDisplayTitle())
-                .font(.system(size: 12))
-                .fontWeight(.medium)
-                .foregroundStyle(Color("Accent"))
-                .lineLimit(1)
-                .frame(height: 14)
+            // Dot kecil
+            Circle()
+                .fill(hasWorkout ? Color("Accent") : Color.clear)
+                .frame(width: 6, height: 6)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 52)
-        .contentShape(Rectangle())
     }
     
-    // supaya tinggi teks tetap sama walau kosong
-    private func getDisplayTitle() -> String {
-        if !isSelected, let title = workoutTitle {
-            return title.components(separatedBy: " ").first ?? ""
-        }
-        return " "
-    }
-    
-    // convert date tanggal
     func dayNumber(_ date: Date) -> String {
         let f = DateFormatter()
         f.dateFormat = "d"
@@ -57,5 +46,5 @@ struct DayCell: View {
 }
 
 #Preview {
-    DayCell(date: Date(), isSelected: true, hasWorkout: true, workoutTitle: "Push")
+    DayCell(date: Date(), isSelected: true, hasWorkout: true)
 }
