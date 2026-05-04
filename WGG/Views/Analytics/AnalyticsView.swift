@@ -9,13 +9,32 @@ import SwiftUI
 import Charts
 
 struct AnalyticsView: View {
+    @State private var selectedTime = "All"
     @State private var selectedExercise = "Bench Press"
     
     let exercises = ["Bench Press", "Dumbell Fly", "Fufufafa"]
     
+    // MARK: Get start date (from now) for timeframe filtering
+    var startDateFilter: Date {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        switch selectedTime {
+        case "1M": return calendar.date(byAdding: .month, value: -1, to: now) ?? .distantPast
+        case "3M": return calendar.date(byAdding: .month, value: -3, to: now) ?? .distantPast
+        case "6M": return calendar.date(byAdding: .month, value: -6, to: now) ?? .distantPast
+        case "1Y": return calendar.date(byAdding: .year, value: -1, to: now) ?? .distantPast
+        default: return .distantPast
+        }
+    }
+    
     // MARK: Get selected exercise history in [(date, entry), ...] format
     var exerciseHistory: [(date: Date, entry: ExerciseEntry)] {
-        MockAnalyticsData.allSessions.compactMap { session in
+        let limitDate = startDateFilter
+        
+        return MockAnalyticsData.allSessions.compactMap { session in
+            guard session.date >= limitDate else { return nil }
+            
             if let foundExercise = session.exercises.first(where: { $0.exerciseName == selectedExercise }) {
                 return (date: session.date, entry: foundExercise)
             }
@@ -78,7 +97,7 @@ struct AnalyticsView: View {
                     .padding()
                     
                     // MARK: Time Range Picker
-                    CustomSegmentedPicker()
+                    CustomSegmentedPicker(selectedTime: $selectedTime)
                     
                     // MARK: Exercise Name Picker
                     Menu {

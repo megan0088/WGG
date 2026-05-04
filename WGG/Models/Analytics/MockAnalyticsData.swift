@@ -15,7 +15,7 @@ struct MockAnalyticsData {
     }
     
     static let allSessions: [WorkoutSession2] = [
-        WorkoutSession2(date: createDate(day: 1, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 15, month: 10, year: 2025), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 12.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 15),
@@ -29,7 +29,7 @@ struct MockAnalyticsData {
                 WorkoutSet(setNumber: 4, reps: 12, weight: 17.5),
             ])
         ]),
-        WorkoutSession2(date: createDate(day: 3, month: 4, year: 2026), exercises: [
+        WorkoutSession2(date: createDate(day: 2, month: 3, year: 2026), exercises: [
             ExerciseEntry(exerciseName: "Bench Press", sets: [
                 WorkoutSet(setNumber: 1, reps: 8, weight: 22.5),
                 WorkoutSet(setNumber: 2, reps: 10, weight: 25),

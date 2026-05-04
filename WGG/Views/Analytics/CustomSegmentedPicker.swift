@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct CustomSegmentedPicker: View {
-    @State private var selectedTime = "All"
+    @Binding private var selectedTime: String
+    
     let times = ["1M", "3M", "6M", "1Y", "All"]
     
-    init() {
+    init(selectedTime: Binding<String>) {
+        self._selectedTime = selectedTime
+        
         UISegmentedControl.appearance().backgroundColor = UIColor.background
         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor.accent
         UISegmentedControl.appearance().setTitleTextAttributes([
@@ -35,5 +38,5 @@ struct CustomSegmentedPicker: View {
 }
 
 #Preview {
-    CustomSegmentedPicker()
+    CustomSegmentedPicker(selectedTime: .constant("All"))
 }
