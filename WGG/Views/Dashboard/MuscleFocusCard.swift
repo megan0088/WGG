@@ -84,11 +84,11 @@ struct MuscleFocusCard: View {
     // mapping
     func color(for muscle: String) -> Color {
         switch muscle {
-        case "Back": return .blue
-        case "Chest": return .red
-        case "Leg": return .green
-        case "Shoulder": return .orange
-        case "Arm": return .purple
+        case "Back": return .back
+        case "Chest": return .chest
+        case "Leg": return .leg
+        case "Shoulder": return .shoulder
+        case "Arm": return .arm
         default: return .gray
         }
     }
