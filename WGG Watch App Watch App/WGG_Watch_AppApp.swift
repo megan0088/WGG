@@ -4,7 +4,7 @@ import SwiftUI
 struct WGGWatchApp: App {
     var body: some Scene {
         WindowGroup {
-//            WatchContentView()
+            WatchContentView()
         }
     }
 }

@@ -19,7 +19,7 @@ struct CustomSegmentedPicker: View {
             .font: UIFont.systemFont(ofSize: 14, weight: .bold)
         ], for: .selected)
         UISegmentedControl.appearance().setTitleTextAttributes([
-            .foregroundColor: UIColor.secondary
+            .foregroundColor: UIColor.brandSecondary
         ], for: .normal)
     }
     

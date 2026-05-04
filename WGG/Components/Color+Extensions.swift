@@ -3,7 +3,6 @@ import SwiftUI
 extension Color {
     static let brandAccent = Color("Colors/Accent")
     static let brandBackground = Color("Colors/Background")
-    static let brandSecondary = Color("Colors/Secondary")
     static let brandPrimaryText = Color("Colors/PrimaryText")
     
     static let back = Color(#colorLiteral(red: 0.3566055894, green: 0.8337495923, blue: 0.8115138412, alpha: 1))
