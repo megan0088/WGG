@@ -18,6 +18,6 @@ struct WGGApp: App {
                 .preferredColorScheme(.dark)
         }
         .environment(workoutManager)
-        .modelContainer(for: [Routine.self, Exercise.self])
+        .modelContainer(for: [Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self])
     }
 }

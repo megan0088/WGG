@@ -7,12 +7,21 @@
 
 import SwiftUI
 import Charts
+import SwiftData
 
 struct AnalyticsView: View {
-    @State private var selectedTime = "All"
-    @State private var selectedExercise = "Bench Press"
+    @Query(filter: #Predicate<Session> { $0.isCompleted }, sort: \Session.date, order: .forward)
+    private var sessions: [Session]
     
-    let exercises = ["Bench Press", "Dumbell Fly", "Fufufafa"]
+    @State private var selectedTime = "All"
+    @State private var selectedExercise: String = ""
+    
+    var exerciseNames: [String] {
+        let names = sessions
+            .flatMap { $0.sessionExercises }
+            .compactMap { $0.exercise?.name }
+        return Array(Set(names)).sorted()
+    }
     
     // MARK: Get start date (from now) for timeframe filtering
     var startDateFilter: Date {
@@ -28,27 +37,35 @@ struct AnalyticsView: View {
         }
     }
     
-    // MARK: Get selected exercise history in [(date, entry), ...] format
-    var exerciseHistory: [(date: Date, entry: ExerciseEntry)] {
+    // MARK: Get selected exercise history in [(date, [sets]), ...] format
+    var exerciseHistory: [(date: Date, sets: [SessionSet])] {
+        guard !selectedExercise.isEmpty else { return [] }
         let limitDate = startDateFilter
         
-        return MockAnalyticsData.allSessions.compactMap { session in
-            guard session.date >= limitDate else { return nil }
-            
-            if let foundExercise = session.exercises.first(where: { $0.exerciseName == selectedExercise }) {
-                return (date: session.date, entry: foundExercise)
+        return sessions
+            .filter { $0.date >= limitDate }
+            .compactMap { session -> (date: Date, sets: [SessionSet])? in
+                guard let sessionEx = session.sessionExercises.first(where: { $0.exercise?.name == selectedExercise })
+                else { return nil }
+                
+                let completedSets = sessionEx.sets
+                    .filter { $0.isCompleted }
+                    .sorted { $0.setNumber < $1.setNumber }
+                
+                guard !completedSets.isEmpty else {return nil }
+                return (date: session.date, sets: completedSets)
             }
-            return nil
-        }
-        .sorted { $0.date < $1.date }
+    }
+    
+    // function to calculate estimated 1RM
+    private func estimated1RM(weight: Double, reps: Int) -> Double {
+        weight * (1.0 + Double(reps) / 30.0)
     }
     
     // MARK: Get best set data for card
     var bestSet: (weight: Double, reps: Int, date: Date) {
-        let allSets = exerciseHistory.flatMap { session in
-            session.entry.sets.map { workoutSet in
-                (weight: workoutSet.weight, reps: workoutSet.reps, session.date)
-            }
+        let allSets = exerciseHistory.flatMap { entry in
+            entry.sets.map { (weight: $0.weight, reps: $0.reps, entry.date) }
         }
         
         let best = allSets.max { set1, set2 in
@@ -62,30 +79,55 @@ struct AnalyticsView: View {
     }
     
     var totalSession: Int { exerciseHistory.count }
-    var lastSession: (date: Date, entry: ExerciseEntry)? { exerciseHistory.last }
+    var lastSession: (date: Date, sets: [SessionSet])? { exerciseHistory.last }
     
     // MARK: Get charts data
     var estimated1RMChartData: [ChartData] {
-        exerciseHistory.map { history in
-            ChartData(x: history.date, y: history.entry.estimated1RM)
+        return exerciseHistory.map { entry in
+            var best: Double = 0
+            
+            for set in entry.sets {
+                let value = estimated1RM(weight: set.weight, reps: set.reps)
+                
+                if value >= best {
+                    best = value
+                }
+            }
+            
+            return ChartData(x: entry.date, y: best)
         }
     }
     
     var maxWeightChartData: [ChartData] {
-        exerciseHistory.map { history in
-            ChartData(x: history.date, y: history.entry.maxWeight)
+        return exerciseHistory.map { entry in
+            var maxWeight: Double = 0
+            
+            for set in entry.sets {
+                if set.weight > maxWeight {
+                    maxWeight = set.weight
+                }
+            }
+            
+            return ChartData(x: entry.date, y: maxWeight)
         }
     }
     
     var volumeChartData: [ChartData] {
-        exerciseHistory.map { history in
-            ChartData(x: history.date, y: history.entry.volume)
+        return exerciseHistory.map { entry in
+            var volume: Double = 0
+            
+            for set in entry.sets {
+                volume += (Double(set.weight) * Double(set.reps))
+            }
+            
+            return ChartData(x: entry.date, y: volume)
         }
     }
     
     var body: some View {
         ZStack {
             Color.background.ignoresSafeArea()
+            
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
@@ -102,8 +144,8 @@ struct AnalyticsView: View {
                     // MARK: Exercise Name Picker
                     Menu {
                         Picker("Select", selection: $selectedExercise) {
-                            ForEach(exercises, id: \.self) { exercise in
-                                Text(exercise)
+                            ForEach(exerciseNames, id: \.self) { name in
+                                Text(name)
                             }
                         }
                     } label: {
@@ -143,7 +185,7 @@ struct AnalyticsView: View {
                         .padding()
                         .background(Color.card)
                         .cornerRadius(15)
-
+                        
                         VStack(alignment: .leading) {
                             Text("Total Session")
                                 .font(.subheadline)
@@ -193,7 +235,7 @@ struct AnalyticsView: View {
                                     Text("Date: -")
                                 }
                                 Spacer()
-                                if let totalSets = lastSession?.entry.sets.last?.setNumber {
+                                if let totalSets = lastSession?.sets.last?.setNumber {
                                     Text("\(totalSets) sets")
                                 } else {
                                     Text("0 sets")
@@ -220,7 +262,7 @@ struct AnalyticsView: View {
                                     
                                     Divider().background(Color.primaryText.opacity(0.5))
                                     
-                                    if let lastSessionSets = lastSession?.entry.sets {
+                                    if let lastSessionSets = lastSession?.sets {
                                         ForEach(lastSessionSets, id: \.setNumber) { set in
                                             GridRow {
                                                 Text("\(set.setNumber)")
@@ -259,4 +301,5 @@ struct AnalyticsView: View {
 
 #Preview {
     AnalyticsView()
+        .modelContainer(for: [Session.self, SessionExercise.self, SessionSet.self, Exercise.self, Routine.self], inMemory: true)
 }
