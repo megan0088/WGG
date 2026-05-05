@@ -17,17 +17,28 @@ struct SessionCard: View {
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
     }
     
-    var totalDuration: Int {
-        let seconds = session.sessionExercises
-            .flatMap {$0.sets}
-            .reduce(0.0) { $0 + ($1.setDuration ?? 0) + ($1.restDuration ?? 0) }
+    var totalDurationText: String {
+        let sets = session.sessionExercises
+            .flatMap { $0.sets }
+            .filter { $0.isCompleted }
         
-        return Int(seconds / 60)
+        let seconds = sets.reduce(0) { result, set in
+            result + (set.setDuration ?? 0) + (set.restDuration ?? 0)
+        }
+        
+        return "\(Int(seconds / 60))m"
     }
-    
-    var totalRest: Int {
-        let seconds = session.sessionExercises.flatMap { $0.sets }.reduce(0.0) { $0 + ($1.restDuration ?? 0) }
-        return Int(seconds / 60)
+
+    var totalRestText: String {
+        let sets = session.sessionExercises
+            .flatMap { $0.sets }
+            .filter { $0.isCompleted }
+        
+        let seconds = sets.reduce(0) { result, set in
+            result + (set.restDuration ?? 0)
+        }
+        
+        return "\(Int(seconds / 60))m"
     }
     
     var body: some View {
@@ -66,7 +77,7 @@ struct SessionCard: View {
                                 Image(systemName: "clock")
                                     .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
-                                Text("\(totalDuration)m (rest: \(minToMinSec(minutes: totalRest)))")
+                                Text("\(totalDurationText) (rest: \(totalRestText))")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
                             }
@@ -93,17 +104,13 @@ struct SessionCard: View {
         .padding()
         .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal)
     }
     
-    func minToMinSec(minutes: Int) -> String {
-        if minutes < 60 {
-            return "\(minutes)m"
-        }
-        
-        let min = minutes / 60
-        let sec = minutes % 60
-        return "\(min)m \(sec)s"
+    func formatTime(_ seconds: Int) -> String {
+        let total = Int(seconds)
+        let minutes = total / 60
+        let secs = total % 60
+        return String(format: "%dm %02ds", minutes, secs)
     }
 }
 

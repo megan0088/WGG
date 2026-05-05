@@ -14,8 +14,8 @@ class SessionSet {
     var setNumber: Int
     var reps: Int
     var weight: Double
-    var setDuration: Double?
-    var restDuration: Double?
+    var setDuration: Int?
+    var restDuration: Int?
     
     var isCompleted: Bool = false
     

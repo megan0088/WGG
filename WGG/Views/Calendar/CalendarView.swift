@@ -43,7 +43,7 @@ struct CalendarView: View {
             
             let seconds = session.sessionExercises
                 .flatMap{$0.sets}
-                .reduce(0.0) {
+                .reduce(0) {
                     $0 + ($1.setDuration ?? 0) +
                     ($1.restDuration ?? 0)
                 }

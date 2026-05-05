@@ -56,7 +56,7 @@ class WorkoutManager {
             activeSet.reps = reps
             
             if let start = currentSetStartTime {
-                activeSet.setDuration = now.timeIntervalSince(start)
+                activeSet.setDuration = Int(now.timeIntervalSince(start))
             }
             
             activeSet.isCompleted = true
@@ -75,7 +75,7 @@ class WorkoutManager {
         
         if let lastSet = lastCompletedSet,
            let restStart = currentRestStartTime {
-            lastSet.restDuration = now.timeIntervalSince(restStart)
+            lastSet.restDuration = Int(now.timeIntervalSince(restStart))
         }
     
         guard let currentEx = currentExercise else { return }
@@ -97,7 +97,7 @@ class WorkoutManager {
         
         if let lastSet = lastCompletedSet,
            let restStart = currentRestStartTime {
-            lastSet.restDuration = now.timeIntervalSince(restStart)
+            lastSet.restDuration = Int(now.timeIntervalSince(restStart))
         }
         
         currentExercise?.isFinished = true
@@ -111,7 +111,7 @@ class WorkoutManager {
 
         if let lastSet = lastCompletedSet,
            let restStart = currentRestStartTime {
-            lastSet.restDuration = now.timeIntervalSince(restStart)
+            lastSet.restDuration = Int(now.timeIntervalSince(restStart))
         }
 
         currentExercise = newExercise

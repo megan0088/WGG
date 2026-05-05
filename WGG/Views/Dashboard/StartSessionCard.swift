@@ -41,8 +41,9 @@ struct StartSessionCard: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 16))
         
-        // MARK: last session summary
-        if let last = last {
+        // MARK: session complete summary for today
+        if let last = last,
+           Calendar.current.isDateInToday(last.date) {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
                     Image(systemName: "checkmark.circle")
@@ -108,7 +109,7 @@ struct StartSessionCard: View {
     func totalDuration(session: Session) -> Int {
         let totalSeconds = session.sessionExercises
             .flatMap { $0.sets }
-            .reduce(0.0) { partial, set in
+            .reduce(0) { partial, set in
                 partial + (set.setDuration ?? 0) + (set.restDuration ?? 0)
             }
         

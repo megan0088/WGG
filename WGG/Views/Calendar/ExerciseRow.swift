@@ -12,7 +12,6 @@ struct ExerciseRow: View {
     let workoutColor: Color?
     @State private var isCollapsed = false
     
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // header
@@ -24,11 +23,13 @@ struct ExerciseRow: View {
                         .font(.system(size: 8))
                         .foregroundStyle(workoutColor ?? Color("Accent"))
                     
-                    let totalSeconds = exercise.sets.reduce(0.0) {
+                    let sets = exercise.sets.filter { $0.isCompleted }
+
+                    let totalSeconds = sets.reduce(0) {
                         $0 + ($1.setDuration ?? 0) + ($1.restDuration ?? 0)
                     }
-                    
-                    let totalRestSeconds = exercise.sets.reduce(0.0) {
+
+                    let totalRestSeconds = sets.reduce(0) {
                         $0 + ($1.restDuration ?? 0)
                     }
 
@@ -38,7 +39,7 @@ struct ExerciseRow: View {
                             .fontWeight(.light)
                             .foregroundStyle(.white)
                         
-                        Text("\(Int(totalSeconds / 60))m (rest: \(Int(totalRestSeconds / 60))m)")
+                        Text("\(formatTime(totalSeconds)) (rest: \(formatTime(totalRestSeconds)))")
                             .font(.system(size: 10))
                             .foregroundStyle(Color("BrandSecondary"))
                     }
@@ -105,6 +106,13 @@ struct ExerciseRow: View {
         .background(.black)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.vertical, 4)
+    }
+    
+    func formatTime(_ seconds: Int) -> String {
+        let total = Int(seconds)
+        let minutes = total / 60
+        let secs = total % 60
+        return String(format: "%dm %02ds", minutes, secs)
     }
 }
 

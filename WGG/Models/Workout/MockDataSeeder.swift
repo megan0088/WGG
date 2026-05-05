@@ -134,7 +134,7 @@ struct MockDataSeeder {
                     (reps: 10, weight: 12 + progressFactor * 0.5)
                 ])
             ]
-            makeSession(routine: pushRoutine, date: day(3), plans: pushPlan, context: context)
+            makeSession(routine: pushRoutine, date: day(2), plans: pushPlan, context: context)
 
             // Leg day
             let legPlan: [MockDataSeeder.ExercisePlan] = [
@@ -205,8 +205,8 @@ struct MockDataSeeder {
             for (index, spec) in plan.sets.enumerated() {
                 let set = SessionSet(setNumber: index + 1, reps: spec.reps, weight: spec.weight)
                 set.isCompleted = true
-                set.setDuration = Double.random(in: 30...90)
-                set.restDuration = Double.random(in: 60...120)
+                set.setDuration = Int.random(in: 30...90)
+                set.restDuration = Int.random(in: 60...120)
                 context.insert(set)
                 sessionEx.sets.append(set)
             }

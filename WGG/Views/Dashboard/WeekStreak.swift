@@ -50,7 +50,7 @@ struct WeekStreak: View {
             .filter { $0.isCompleted && $0.date >= interval.start && $0.date < interval.end }
             .flatMap { $0.sessionExercises }
             .flatMap { $0.sets }
-            .reduce(0.0) { partial, set in
+            .reduce(0) { partial, set in
                 partial + (set.setDuration ?? 0) + (set.restDuration ?? 0)
             }
         

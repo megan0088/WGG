@@ -14,7 +14,6 @@ struct MuscleFocusCard: View {
     var sessions: [Session]
     
     let muscleGroups: [String] = [
-        "All",
         "Chest",
         "Shoulders",
         "Back",
