@@ -72,10 +72,8 @@ struct WatchActiveSetView: View {
                 exercise: exercise,
                 weight: weight,
                 reps: manager.repCount,
-                detectedName: manager.detectedExercise == "Unknown" || manager.detectedExercise == "Detecting..."
-                    ? exercise.name
-                    : manager.detectedExercise,
-                confidence: manager.confidence > 0 ? manager.confidence : 0.87
+                detectedName: exercise.name,
+                confidence:  0.87
             )
         }
     }

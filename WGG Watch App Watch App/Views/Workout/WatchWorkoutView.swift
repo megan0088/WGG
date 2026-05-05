@@ -7,10 +7,10 @@ struct WatchWorkoutView: View {
         ZStack {
             Color.brandBackground.ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(spacing: 0) {
 
                 Text("TODAY")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.brandSecondary)
                     .padding(.horizontal, 12)
                     .padding(.top, 8)
@@ -32,8 +32,8 @@ struct WatchWorkoutView: View {
                 NavigationLink {
                     WatchWeightInputView(exercise: routine.exercises[0])
                 } label: {
-                    Text("Start Workout")
-                        .font(.footnote.bold())
+                    Text("Start Session")
+                        .font(.subheadline.bold())
                         .frame(maxWidth: .infinity)
                         .foregroundStyle(.black)
                 }
@@ -41,16 +41,16 @@ struct WatchWorkoutView: View {
                 .tint(Color.brandAccent)
                 .padding(.horizontal, 12)
 
-                HStack(spacing: 4) {
-                    Text("🔥")
-                        .font(.caption2)
-                    Text("14 day streak")
-                        .font(.caption2)
-                        .foregroundStyle(Color.brandSecondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.top, 6)
-                .padding(.bottom, 8)
+//                HStack(spacing: 4) {
+//                    Text("🔥")
+//                        .font(.caption2)
+//                    Text("14 day streak")
+//                        .font(.caption2)
+//                        .foregroundStyle(Color.brandSecondary)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .padding(.top, 6)
+//                .padding(.bottom, 8)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
