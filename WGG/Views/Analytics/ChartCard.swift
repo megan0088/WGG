@@ -122,6 +122,7 @@ struct ChartCard: View {
                         }
                     }
                 }
+                .chartXScale(range: .plotDimension(padding: 5))
                 .frame(height: 200)
                 .chartXSelection(value: $selectedDate)
                 .chartYAxis {
@@ -131,7 +132,14 @@ struct ChartCard: View {
                     }
                 }
                 .chartXAxis {
-                    AxisMarks {
+                    let stride = max(1, Int(ceil(Double(data.count) / 6.0)))
+                    let xAxisValues = data.enumerated().compactMap { index, item -> String? in
+                        if index % stride == 0 {
+                            return item.x.formatted(.dateTime.day(.twoDigits).month(.twoDigits))
+                        }
+                        return nil
+                    }
+                    AxisMarks(values: xAxisValues) {
                         AxisValueLabel()
                             .foregroundStyle(Color.primaryText.opacity(0.5))
                     }

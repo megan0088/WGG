@@ -296,6 +296,11 @@ struct AnalyticsView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .onAppear {
+            if selectedExercise.isEmpty {
+                selectedExercise = exerciseNames.first ?? ""
+            }
+        }
     }
 }
 
