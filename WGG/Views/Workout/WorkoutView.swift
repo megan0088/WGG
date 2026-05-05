@@ -239,23 +239,23 @@ struct WorkoutView: View {
                 .presentationDetents([.medium])
                 .presentationBackground(Color.background)
             }
-            .onAppear {
-                // Cek apakah database exercise masih kosong?
-                if exerciseList.isEmpty {
-                    // 1. Masukkan semua Master Exercise ke database
-                    for ex in Exercise.exerciseList {
-                        modelContext.insert(ex)
-                    }
-                    
-                    // 2. Masukkan Routine dummy bawaanmu ke database
-                    //                for routine in Routine.dummyRoutine {
-                    //                    modelContext.insert(routine)
-                    //                }
-                    
-                    // 3. Paksa simpan
-                    try? modelContext.save()
-                }
-            }
+//            .onAppear {
+//                // Cek apakah database exercise masih kosong?
+//                if exerciseList.isEmpty {
+//                    // 1. Masukkan semua Master Exercise ke database
+//                    for ex in Exercise.exerciseList {
+//                        modelContext.insert(ex)
+//                    }
+//                    
+//                    // 2. Masukkan Routine dummy bawaanmu ke database
+//                    //                for routine in Routine.dummyRoutine {
+//                    //                    modelContext.insert(routine)
+//                    //                }
+//                    
+//                    // 3. Paksa simpan
+//                    try? modelContext.save()
+//                }
+//            }
         }
     }
 }

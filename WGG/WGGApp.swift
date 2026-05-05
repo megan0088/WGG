@@ -11,6 +11,16 @@ import SwiftData
 @main
 struct WGGApp: App {
     @State private var workoutManager = WorkoutManager()
+    let container: ModelContainer
+    
+    init() {
+        do {
+            container = try ModelContainer(for: Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self)
+            MockDataSeeder.seedIfNeeded(context: container.mainContext)
+        } catch {
+            fatalError("\(error)")
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -18,6 +28,6 @@ struct WGGApp: App {
                 .preferredColorScheme(.dark)
         }
         .environment(workoutManager)
-        .modelContainer(for: [Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self])
+        .modelContainer(container)
     }
 }
