@@ -6,12 +6,80 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct WeekStreak: View {
-    let dates = DashboardData.thisWeekDates
-    let workouts = DashboardData.workoutDates
+    
+    @Binding var selectedTab: Tab
+    
+    @Query(sort: \Session.date, order: .reverse)
+    var sessions: [Session]
     
     let calendar = Calendar.current
+    
+    var dates: [Date] {
+        let start = calendar.dateInterval(of: .weekOfYear, for: Date())!.start
+        return (0..<7).map { calendar.date(byAdding: .day, value: $0, to: start)! }
+    }
+    
+    var workouts: [Date: (title: String, color: Color)] {
+        var dict: [Date: (String, Color)] = [:]
+        
+        for session in sessions where session.isCompleted {
+            let key = calendar.startOfDay(for: session.date)
+            
+            let title = session.routine?.title
+                .components(separatedBy: " ")
+                .first ?? "Workout"
+            
+            let color =
+                session.routine?.themeColor ??
+                session.sessionExercises.first?.exercise?.themeColor ??
+                .gray
+            
+            dict[key] = (title, color)
+        }
+        
+        return dict
+    }
+    
+    var totalMinutes: Int {
+        let interval = calendar.dateInterval(of: .weekOfYear, for: Date())!
+        
+        let totalSeconds = sessions
+            .filter { $0.isCompleted && $0.date >= interval.start && $0.date < interval.end }
+            .flatMap { $0.sessionExercises }
+            .flatMap { $0.sets }
+            .reduce(0.0) { partial, set in
+                partial + (set.setDuration ?? 0) + (set.restDuration ?? 0)
+            }
+        
+        return Int(totalSeconds / 60)
+    }
+    
+    var currentStreak: Int {
+        var streak = 0
+        var currentWeek = Date()
+        
+        while true {
+            let interval = calendar.dateInterval(of: .weekOfYear, for: currentWeek)!
+            
+            let hasWorkout = sessions.contains {
+                $0.isCompleted &&
+                $0.date >= interval.start &&
+                $0.date < interval.end
+            }
+            
+            if hasWorkout {
+                streak += 1
+                currentWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: currentWeek)!
+            } else {
+                break
+            }
+        }
+        
+        return streak
+    }
     
     var body: some View {
         
@@ -20,7 +88,9 @@ struct WeekStreak: View {
             Color.black
                 .ignoresSafeArea()
             
-            NavigationLink(destination: CalendarView()) {
+            Button {
+                selectedTab = .calendar
+            } label: {
                 VStack(alignment: .leading, spacing: 12) {
                     //title
                     HStack {
@@ -42,10 +112,9 @@ struct WeekStreak: View {
                         ForEach(dates, id: \.self) { date in
                             
                             let isToday = calendar.isDateInToday(date)
-                            let workoutType = workouts.first {
+                            let workoutData = workouts.first {
                                 calendar.isDate($0.key, inSameDayAs: date)
                             }?.value
-                            
                             
                             VStack(spacing: 6) {
                                 
@@ -57,36 +126,33 @@ struct WeekStreak: View {
                                 
                                 // tanggal
                                 ZStack {
+                                    
+                                    if let data = workoutData {
+                                        Circle()
+                                            .fill(data.color.opacity(0.25))
+                                            .frame(width: 36, height: 36)
+                                    }
+                                    
                                     Circle()
                                         .stroke(
-                                            workoutType != nil ? Color("Accent") : Color.clear,
+                                            workoutData != nil ? (workoutData?.color ?? Color("Accent")) : Color.clear,
                                             lineWidth: 2
                                         )
                                         .frame(width: 36, height: 36)
                                     
                                     if isToday {
                                         Circle()
-                                            .fill(Color("Accent").opacity(0.2))
+                                            .fill(workoutData?.color.opacity(0.2) ?? Color("Accent").opacity(0.2))
                                             .frame(width: 36, height: 36)
                                     }
                                     
                                     Text("\(dayNumber(from: date))")
                                         .font(.footnote)
                                         .foregroundStyle(
-                                            workoutType != nil || isToday ? Color("Accent") : Color(#colorLiteral(red: 0.3364975452, green: 0.3364975452, blue: 0.3364975452, alpha: 1))
+                                            workoutData != nil || isToday
+                                            ? (workoutData?.color ?? Color("Accent"))
+                                            : Color(#colorLiteral(red: 0.3364, green: 0.3364, blue: 0.3364, alpha: 1))
                                         )
-                                        .fontWeight(isToday ? .bold : .semibold)
-                                }
-                                
-                                // label
-                                if let type = workoutType {
-                                    Text(type)
-                                        .font(.caption2)
-                                        .fontWeight(.medium)
-                                        .foregroundStyle(Color("Accent"))
-                                } else {
-                                    Text(" ")
-                                        .font(.caption2)
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -101,7 +167,7 @@ struct WeekStreak: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(Color("Accent"))
                             VStack(alignment: .leading) {
-                                Text("\(DashboardData.currentStreakWeeks) weeks")
+                                Text("\(currentStreak) weeks")
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
                                 Text("current streak")
@@ -118,7 +184,7 @@ struct WeekStreak: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(Color("Accent"))
                             VStack(alignment: .leading) {
-                                Text("\(DashboardData.totalMinutes)")
+                                Text("\(totalMinutes)")
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
                                 Text("minutes")
@@ -151,18 +217,18 @@ struct WeekStreak: View {
     // get day name
     func dayString(from date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "E" // mon tue dst
+        formatter.dateFormat = "E"
         return formatter.string(from: date)
     }
     
     // get day number
     func dayNumber(from date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "d" // 1-31
+        formatter.dateFormat = "d"
         return formatter.string(from: date)
     }
 }
 
 #Preview {
-    WeekStreak()
+    WeekStreak(selectedTab: .constant(.home))
 }

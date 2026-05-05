@@ -6,16 +6,57 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MuscleFocusCard: View {
-    let rawData = DashboardData.muscleFocus
-    let defaultMuscles = ["Back", "Chest", "Leg", "Shoulder", "Arm"]
     
-    var displayData: [(name: String, value: Double)] {
-        defaultMuscles.map { ($0, rawData[$0] ?? 0) }
+    @Query(sort: \Session.date, order: .reverse)
+    var sessions: [Session]
+    
+    let muscleGroups: [String] = [
+        "All",
+        "Chest",
+        "Shoulders",
+        "Back",
+        "Arms",
+        "Legs"
+    ]
+    let calendar = Calendar.current
+    
+    var rawData: [String: Double] {
+        let thisMonth = calendar.component(.month, from: Date())
+        let thisYear = calendar.component(.year, from: Date())
+        
+        var dict: [String: Double] = [:]
+        
+        for session in sessions where session.isCompleted {
+            let m = calendar.component(.month, from: session.date)
+            let y = calendar.component(.year, from: session.date)
+            
+            if m == thisMonth && y == thisYear {
+                for se in session.sessionExercises {
+                    guard let exercise = se.exercise else { continue }
+                    
+                    let volume = se.sets.reduce(0.0) {
+                        $0 + ($1.weight * Double($1.reps))
+                    }
+                    
+                    dict[exercise.muscleGroup, default: 0] += volume
+                }
+            }
+        }
+        
+        let total = dict.values.reduce(0, +)
+        
+        if total == 0 { return [:] }
+        
+        return dict.mapValues { ($0 / total) * 100 }
     }
     
-    // Data untuk chart (> 0%)
+    var displayData: [(name: String, value: Double)] {
+        muscleGroups.map { ($0, rawData[$0] ?? 0) }
+    }
+    
     var chartData: [(name: String, value: Double)] {
         displayData.filter { $0.value > 0 }
     }
@@ -25,30 +66,30 @@ struct MuscleFocusCard: View {
             TitleText(text: "Muscle Focus This Month", isUpper: true)
             
             HStack(spacing: 32) {
-                // MARK: - Chart
+                
                 ZStack {
                     if chartData.isEmpty {
                         Circle()
                             .stroke(Color.white.opacity(0.1), lineWidth: 20)
                     } else {
                         ForEach(Array(chartData.enumerated()), id: \.offset) { index, item in
-                            let start = getAngle(for: index)
-                            let end = getAngle(for: index + 1)
+                            let totalGap: Double = chartData.count > 1 ? 6 : 0
+                            let gapPerSegment = totalGap / Double(chartData.count)
                             
-                            // Segmen Warna
+                            let startBase = getAngle(for: index)
+                            let endBase = getAngle(for: index + 1)
+                            
+                            let start = startBase + gapPerSegment / 2
+                            let end = endBase - gapPerSegment / 2
+                            
                             DonutSegment(startAngle: start, endAngle: end)
                                 .stroke(color(for: item.name), style: StrokeStyle(lineWidth: 20, lineCap: .butt))
-                            
-                            // gap
-                            DonutSegment(startAngle: end - 1, endAngle: end + 1)
-                                .stroke(Color("Card"), style: StrokeStyle(lineWidth: 20, lineCap: .butt))
                         }
                     }
                 }
                 .frame(width: 110, height: 110)
                 .rotationEffect(.degrees(-90))
                 
-                // MARK: - Legend
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(displayData, id: \.name) { item in
                         HStack(spacing: 8) {
@@ -81,14 +122,13 @@ struct MuscleFocusCard: View {
         return (totalProgress / 100) * 360
     }
     
-    // mapping
     func color(for muscle: String) -> Color {
         switch muscle {
         case "Back": return .back
         case "Chest": return .chest
-        case "Leg": return .leg
-        case "Shoulder": return .shoulder
-        case "Arm": return .arm
+        case "Leg", "Legs": return .leg
+        case "Shoulder", "Shoulders": return .shoulder
+        case "Arm", "Arms": return .arm
         default: return .gray
         }
     }

@@ -10,6 +10,8 @@ import SwiftUI
 struct DashboardView: View {
     let dashboardData = DashboardData.self
     
+    @Binding var selectedTab: Tab
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -20,7 +22,7 @@ struct DashboardView: View {
                     VStack(alignment: .leading, spacing: 22) {
                         PageTitle(title: "Home")
                         
-                        WeekStreak()
+                        WeekStreak(selectedTab: $selectedTab)
                         
                         StartSessionCard()
                         
@@ -38,5 +40,5 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(selectedTab: .constant(.home))
 }
