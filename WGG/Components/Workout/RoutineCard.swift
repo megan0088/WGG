@@ -16,7 +16,7 @@ struct RoutineCard: View {
             Image(systemName: "dumbbell.fill")
                 .foregroundStyle(routine.themeColor)
                 .frame(width: 40, height: 40)
-                .background(routine.themeColor.opacity(0.5))
+                .background(routine.themeColor.opacity(0.133))
                 .cornerRadius(8)
             
             VStack (alignment: .leading) {
@@ -58,9 +58,9 @@ struct RoutineCard: View {
     }
 }
 
-#Preview {
-    RoutineCard(routine: Routine(
-        title: "Pull Day",
-        themeColor: Color.red
-    ), action: {})
-}
+//#Preview {
+//    RoutineCard(routine: Routine(
+//        title: "Pull Day",
+//        themeColorName: "red"
+//    ), action: {})
+//}
