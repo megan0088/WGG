@@ -20,10 +20,7 @@ struct RestTimeView: View {
     
     // Helper untuk mengambil Set terakhir yang baru saja di-log
     var lastCompletedSet: SessionSet? {
-        manager.currentExercise?.sets
-            .filter { $0.isCompleted }
-            .sorted { $0.setNumber < $1.setNumber }
-            .last
+        manager.lastCompletedSet
     }
     
     func timeString(time: Double) -> String {

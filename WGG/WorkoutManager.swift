@@ -14,8 +14,13 @@ class WorkoutManager {
     var activeSession: Session?
     
     var currentExercise: SessionExercise?
-    
+
     var showRestTimer: Bool = false
+
+    var currentSetStartTime: Date?
+    var currentRestStartTime: Date?
+
+    var lastCompletedSet: SessionSet?
     
     // MARK: - 1. Start Workout
     func startWorkout(from routine: Routine, context: ModelContext) {
@@ -35,17 +40,30 @@ class WorkoutManager {
         
         self.activeSession = newSession
         self.currentExercise = newSession.sessionExercises.first
+        
+        currentSetStartTime = Date()
     }
     
     // MARK: - 2. Log Set
     func completeActiveSet(weight: Double, reps: Int) {
         guard let currentEx = currentExercise else { return }
         
+        let now = Date()
+        
         if let activeSet = currentEx.sets.sorted(by: { $0.setNumber < $1.setNumber }).first(where: { !$0.isCompleted }) {
             
             activeSet.weight = weight
             activeSet.reps = reps
+            
+            if let start = currentSetStartTime {
+                activeSet.setDuration = now.timeIntervalSince(start)
+            }
+            
             activeSet.isCompleted = true
+            
+            lastCompletedSet = activeSet
+            
+            currentRestStartTime = now
             
             showRestTimer = true
         }
@@ -53,6 +71,13 @@ class WorkoutManager {
     
     // MARK: - 3. Next Set
     func addNextSet() {
+        let now = Date()
+        
+        if let lastSet = lastCompletedSet,
+           let restStart = currentRestStartTime {
+            lastSet.restDuration = now.timeIntervalSince(restStart)
+        }
+    
         guard let currentEx = currentExercise else { return }
         
         if !currentEx.isFinished {
@@ -61,16 +86,41 @@ class WorkoutManager {
             currentEx.sets.append(newSet)
         }
         
+        currentSetStartTime = now
+        
         showRestTimer = false
     }
     
     // MARK: - 4. Finish Exercise
     func finishCurrentExercise() {
+        let now = Date()
+        
+        if let lastSet = lastCompletedSet,
+           let restStart = currentRestStartTime {
+            lastSet.restDuration = now.timeIntervalSince(restStart)
+        }
+        
         currentExercise?.isFinished = true
         showRestTimer = false
     }
     
-    // MARK: - 5. Finish Workout
+    // MARK: - 5. Switch Exercise
+    func switchExercise(to newExercise: SessionExercise) {
+
+        let now = Date()
+
+        if let lastSet = lastCompletedSet,
+           let restStart = currentRestStartTime {
+            lastSet.restDuration = now.timeIntervalSince(restStart)
+        }
+
+        currentExercise = newExercise
+        currentSetStartTime = now
+        currentRestStartTime = nil
+
+    }
+    
+    // MARK: - 6. Finish Workout
     func finishWorkout() {
         if let sessionExercises = activeSession?.sessionExercises {
             for ex in sessionExercises {

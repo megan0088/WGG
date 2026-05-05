@@ -65,7 +65,7 @@ struct LogSetView: View {
                                     let exerciseName = sessionEx.exercise?.name ?? "Unknown"
                                     
                                     Button {
-                                        manager.currentExercise = sessionEx
+                                        manager.switchExercise(to: sessionEx)
                                     } label: {
                                         Text(exerciseName)
                                             .foregroundStyle(isSelected ? Color.accent : Color.primaryText.opacity(0.5))
