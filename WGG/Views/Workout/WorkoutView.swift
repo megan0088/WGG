@@ -53,7 +53,7 @@ struct WorkoutView: View {
             ZStack {
                 Color.background.ignoresSafeArea()
                 
-                ScrollView {
+                ScrollView (showsIndicators: false) {
                     VStack (alignment: .leading) {
                         Text("Exercises")
                             .font(.title.bold())
@@ -114,7 +114,11 @@ struct WorkoutView: View {
                                                 .padding(8)
                                                 .padding(.horizontal, 8)
                                                 .background(isActive ? Color.accent : Color.background)
-                                                .border(isActive ? Color.background : Color.accent.opacity(0.3), width: isActive ? 0 : 1)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 16)
+                                                        .stroke(Color.accent)
+                                                )
+                                                .cornerRadius(16)
                                         }
                                     }
                                 }

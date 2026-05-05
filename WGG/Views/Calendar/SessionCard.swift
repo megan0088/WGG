@@ -20,7 +20,7 @@ struct SessionCard: View {
     var totalDuration: Int {
         let seconds = session.sessionExercises
             .flatMap {$0.sets}
-            .reduce(0.0) { $0 + ($1.setDuration ?? 0) }
+            .reduce(0.0) { $0 + ($1.setDuration ?? 0) + ($1.restDuration ?? 0) }
         
         return Int(seconds / 60)
     }
