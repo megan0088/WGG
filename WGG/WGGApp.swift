@@ -16,8 +16,8 @@ struct WGGApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.dark)
-                .environment(workoutManager)
         }
+        .environment(workoutManager)
         .modelContainer(for: [Routine.self, Exercise.self])
     }
 }

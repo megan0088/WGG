@@ -32,7 +32,10 @@ struct WorkoutView: View {
 //    @State private var newRoutineColor: Color = .red
 //    let availableColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
     
+    @Environment(WorkoutManager.self) private var manager
     @Environment(\.modelContext) private var modelContext
+    
+    @State private var navigateToLogSet: Bool = false
     
     
     var filteredExercises: [Exercise] {
@@ -46,6 +49,7 @@ struct WorkoutView: View {
     }
     
     var body: some View {
+        NavigationStack {
             ZStack {
                 Color.background.ignoresSafeArea()
                 
@@ -82,7 +86,10 @@ struct WorkoutView: View {
                             
                             
                             ForEach(routines) { routine in
-                                RoutineCard(routine: routine, action: {})
+                                RoutineCard(routine: routine) {
+                                    manager.startWorkout(from: routine, context: modelContext)
+                                    navigateToLogSet = true
+                                }
                             }
                         }
                         .padding(.bottom, 20)
@@ -151,6 +158,9 @@ struct WorkoutView: View {
                     }
                 }
                 .animation(.easeInOut, value: selectedExerciseIDs.isEmpty)
+            }
+            .navigationDestination(isPresented: $navigateToLogSet) {
+                LogSetView()
             }
             .sheet(isPresented: $showSaveSheet) {
                 VStack(alignment: .leading) {
@@ -246,10 +256,13 @@ struct WorkoutView: View {
                     try? modelContext.save()
                 }
             }
+        }
     }
 }
 
 #Preview {
     WorkoutView()
+        .environment(WorkoutManager())
+        .modelContainer(for: [Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self], inMemory: true)
 }
 

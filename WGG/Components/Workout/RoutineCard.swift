@@ -32,7 +32,7 @@ struct RoutineCard: View {
             Spacer()
             
             Button{
-                
+                action()
             } label: {
                 HStack {
                     Text("Start")

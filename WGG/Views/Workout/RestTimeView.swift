@@ -6,14 +6,25 @@
 //
 
 import SwiftUI
-internal import Combine // CHANGE: internal
+internal import Combine
 
 struct RestTimeView: View {
     
-    @State private var timeRemaining: Double = 10
+    // 1. Panggil WorkoutManager
+    @Environment(WorkoutManager.self) private var manager
+    
+    @State private var timeRemaining: Double = 60 // Ubah ke 60 detik (standar istirahat)
     @State private var isBlinking: Bool = false
-    let totalTime: Double = 10
+    let totalTime: Double = 60
     let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
+    
+    // Helper untuk mengambil Set terakhir yang baru saja di-log
+    var lastCompletedSet: SessionSet? {
+        manager.currentExercise?.sets
+            .filter { $0.isCompleted }
+            .sorted { $0.setNumber < $1.setNumber }
+            .last
+    }
     
     func timeString(time: Double) -> String {
         let displayTime = Int(ceil(time))
@@ -31,13 +42,24 @@ struct RestTimeView: View {
             Color.background.ignoresSafeArea()
             
             VStack {
-                Text("Pull Up · Set 2 of 4")
+                // 2. Tampilkan Nama Exercise dan Nomor Set secara dinamis
+                let exerciseName = manager.currentExercise?.exercise?.name ?? "Exercise"
+                let currentSetNum = lastCompletedSet?.setNumber ?? 1
+                let totalSets = manager.currentExercise?.sets.count ?? 1
+                
+                Text("\(exerciseName) · Set \(currentSetNum) of \(totalSets)")
                     .foregroundStyle(Color.primaryText.opacity(0.5))
                 
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark")
-                    Text("5 kg x 8 reps logged")
-                        .font(.headline)
+                    // 3. Tampilkan Data Beban dan Reps yang baru di-log
+                    if let lastSet = lastCompletedSet {
+                        Text("\(String(format: "%.1f", lastSet.weight)) kg x \(lastSet.reps) reps logged")
+                            .font(.headline)
+                    } else {
+                        Text("Set logged")
+                            .font(.headline)
+                    }
                 }
                 .foregroundStyle(Color.accent)
                 
@@ -78,7 +100,8 @@ struct RestTimeView: View {
                 
                 HStack {
                     Button {
-                        
+                        // 4. Panggil fungsi Finish Exercise dari manager
+                        manager.finishCurrentExercise()
                     } label: {
                         Text("Finish Exercise")
                             .font(.title2)
@@ -91,7 +114,8 @@ struct RestTimeView: View {
                     }
                     
                     Button {
-                        
+                        // 5. Panggil fungsi Next Set dari manager
+                        manager.addNextSet()
                     } label: {
                         Text("Next Set")
                             .font(.title2)
@@ -111,4 +135,6 @@ struct RestTimeView: View {
 
 #Preview {
     RestTimeView()
+        // Jangan lupa suntikkan ini supaya Preview tidak crash
+        .environment(WorkoutManager())
 }
