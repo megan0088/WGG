@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ExerciseRow: View {
-    let exercise: ExerciseDetail
+    let exercise: SessionExercise
+    let workoutColor: Color?
     @State private var isCollapsed = false
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,17 +22,23 @@ struct ExerciseRow: View {
                 HStack(spacing: 12) {
                     Image(systemName: "circle.fill")
                         .font(.system(size: 8))
-                        .foregroundStyle(Color("Accent"))
-                        
-                    let timeStats = getSessionTimeStats([exercise])
+                        .foregroundStyle(workoutColor ?? Color("Accent"))
+                    
+                    let totalSeconds = exercise.sets.reduce(0.0) {
+                        $0 + ($1.setDuration ?? 0) + ($1.restDuration ?? 0)
+                    }
+                    
+                    let totalRestSeconds = exercise.sets.reduce(0.0) {
+                        $0 + ($1.restDuration ?? 0)
+                    }
 
                     HStack(spacing: 6) {
-                        Text(exercise.name)
+                        Text(exercise.exercise?.name ?? "Exercise")
                             .font(.subheadline)
                             .fontWeight(.light)
                             .foregroundStyle(.white)
                         
-                        Text("\(timeStats.total) (rest: \(timeStats.rest))")
+                        Text("\(Int(totalSeconds / 60))m (rest: \(Int(totalRestSeconds / 60))m)")
                             .font(.system(size: 10))
                             .foregroundStyle(Color("BrandSecondary"))
                     }
@@ -64,7 +72,7 @@ struct ExerciseRow: View {
 
                     // Data List
                     VStack(spacing: 12) {
-                        ForEach(0..<exercise.sets.count, id: \.self) { index in
+                        ForEach(exercise.sets.indices, id: \.self) { index in
                             let set = exercise.sets[index]
                             HStack(spacing: 0) {
                                 // Kolom Set
@@ -98,29 +106,22 @@ struct ExerciseRow: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.vertical, 4)
     }
-
-    // get durasi dan rest time formatted
-    func getSessionTimeStats(_ exercises: [ExerciseDetail]) -> (total: String, rest: String) {
-        let exerciseMinutes = exercises.reduce(0) { $0 + $1.duration }
-        let totalRestSeconds = exercises.reduce(0) { exSum, ex in
-            exSum + ex.sets.reduce(0) { $0 + $1.rest }
-        }
-        
-        let restMinutes = totalRestSeconds / 60
-        let totalMinutes = exerciseMinutes + restMinutes
-        
-        let totalFormatted = totalMinutes >= 60 ? "\(totalMinutes/60)h \(totalMinutes%60)m" : "\(totalMinutes)m"
-        let restFormatted = "\(restMinutes)m \(totalRestSeconds % 60)s"
-        
-        return (totalFormatted, restFormatted)
-    }
 }
 
 #Preview {
-    ExerciseRow(
-        exercise: ExerciseDetail(name: "Test", muscle: "Leg", sets: [
-            ExerciseSet(reps: 8, weight: 30, rest: 50),
-            ExerciseSet(reps: 8, weight: 40, rest: 100)
-        ], duration: 20)
-    )
+    let ex = Exercise(name: "Bench Press", muscleGroup: "Chest")
+    let session = Session(date: Date())
+    
+    let se = SessionExercise(session: session, exercise: ex)
+    se.sets = [
+        SessionSet(setNumber: 1, reps: 10, weight: 60),
+        SessionSet(setNumber: 2, reps: 8, weight: 70)
+    ]
+    se.sets.forEach {
+        $0.setDuration = 40
+        $0.restDuration = 60
+    }
+    
+    return ExerciseRow(exercise: se, workoutColor: Color.accent)
+        .background(.black)
 }

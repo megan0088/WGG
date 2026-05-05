@@ -6,40 +6,51 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct CalendarView: View {
+    
+    let calendar = Calendar.current
+    
+    @Query(sort: \Session.date, order: .reverse)
+    var sessions: [Session]
     
     @State private var currentMonth = Date()
     @State private var selectedDate: Date = Date()
     
-    let calendar = Calendar.current
-    
-    var filteredSessions: [WorkoutSession] {
-        DashboardData.sessions.filter { session in
-            calendar.isDate(session.date, equalTo: currentMonth, toGranularity: .month)
+    var filteredSessions: [Session] {
+        sessions.filter{
+            calendar.isDate($0.date, equalTo: currentMonth, toGranularity: .month) && $0.isCompleted
         }
     }
     
     var totalVolume: String {
         let volume = filteredSessions.reduce(0.0) { sessionSum, session in
-            sessionSum + session.exercises.reduce(0.0) { exerciseSum, exercise in
-                exerciseSum + exercise.sets.reduce(0.0) { $0 + (Double($1.reps) * $1.weight) }
-            }
+            sessionSum + session.sessionExercises
+                .flatMap {$0.sets}
+                .reduce(0.0)
+            { $0 + (Double($1.reps) * $1.weight) }
         }
+        
         return volume >= 1000 ? String(format: "%.1fk", volume / 1000) : "\(Int(volume))"
     }
     
     var avgDuration: String {
         guard !filteredSessions.isEmpty else { return "0m" }
-        let totalMinutes = filteredSessions.reduce(0) { sum, session in
-            // durasi latihan + rest
-            let sessionDuration = session.exercises.reduce(0) { exerciseSum, exercise in
-                let exerciseRest = exercise.sets.reduce(0) { $0 + $1.rest } // total rest (s)
-                return exerciseSum + exercise.duration + (exerciseRest / 60)
-            }
+        // durasi latihan + rest
+        let totalMinutes = filteredSessions.reduce(0) {
+            sum, session in
             
-            return sum + sessionDuration
+            let seconds = session.sessionExercises
+                .flatMap{$0.sets}
+                .reduce(0.0) {
+                    $0 + ($1.setDuration ?? 0) +
+                    ($1.restDuration ?? 0)
+                }
+            
+            return sum + Int(seconds) / 60
         }
+            
         let avg = totalMinutes / filteredSessions.count
         let hours = avg / 60
         let minutes = avg % 60
@@ -146,13 +157,20 @@ struct CalendarView: View {
                                 let days = daysInMonth()
                                 ForEach(0..<days.count, id: \.self) { index in
                                     if let date = days[index] {
-                                        let sessionForDate = DashboardData.sessions.first {
+                                        let sessionForDate = sessions.first {
+                                            $0.isCompleted &&
                                             calendar.isDate($0.date, inSameDayAs: date)
                                         }
+
+                                        let color =
+                                            sessionForDate?.routine?.themeColor ??
+                                            sessionForDate?.sessionExercises.first?.exercise?.themeColor
+
                                         DayCell(
                                             date: date,
                                             isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
-                                            hasWorkout: sessionForDate != nil
+                                            workoutColor: color
+
                                         )
                                         .onTapGesture {
                                             selectedDate = date
@@ -207,8 +225,8 @@ struct CalendarView: View {
     
     // ada workout hari ini?
     func hasWorkout(on date: Date) -> Bool {
-        DashboardData.sessions.contains {
-            calendar.isDate($0.date, inSameDayAs: date)
+        sessions.contains {
+            $0.isCompleted && calendar.isDate($0.date, inSameDayAs: date)
         }
     }
 }

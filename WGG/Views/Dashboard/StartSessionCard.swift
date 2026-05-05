@@ -10,6 +10,8 @@ import SwiftData
 
 struct StartSessionCard: View {
     
+    @Binding var selectedTab: Tab
+    
     @Query(sort: \Session.date, order: .reverse)
     var sessions: [Session]
     
@@ -20,7 +22,9 @@ struct StartSessionCard: View {
     var body: some View {
         // tombol start session
         ZStack {
-            NavigationLink(destination: WorkoutView()) {
+            Button {
+                selectedTab = .workout
+            } label: {
                 HStack {
                     Text("Start Today's Session")
                         .fontWeight(.bold)
@@ -134,5 +138,5 @@ struct StartSessionCard: View {
 }
 
 #Preview {
-    StartSessionCard()
+    StartSessionCard(selectedTab: .constant(.home))
 }

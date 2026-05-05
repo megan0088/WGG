@@ -8,21 +8,26 @@
 import SwiftUI
 
 struct SessionCard: View {
-    let session: WorkoutSession
-    @State private var isExpanded = false 
+    let session: Session
+    @State private var isExpanded = false
     
     var totalVolume: Double {
-        session.exercises.reduce(0) { total, exercise in
-            total + exercise.sets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
-        }
+        session.sessionExercises
+            .flatMap {$0.sets}
+            .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
     }
     
     var totalDuration: Int {
-        session.exercises.reduce(0) { $0 + $1.duration }
+        let seconds = session.sessionExercises
+            .flatMap {$0.sets}
+            .reduce(0.0) { $0 + ($1.setDuration ?? 0) }
+        
+        return Int(seconds / 60)
     }
     
     var totalRest: Int {
-        session.exercises.flatMap { $0.sets }.reduce(0) { $0 + $1.rest }
+        let seconds = session.sessionExercises.flatMap { $0.sets }.reduce(0.0) { $0 + ($1.restDuration ?? 0) }
+        return Int(seconds / 60)
     }
     
     var body: some View {
@@ -33,7 +38,7 @@ struct SessionCard: View {
             } label: {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(session.title)
+                        Text(session.routine?.title ?? "Workout")
                             .font(.headline)
                             .foregroundStyle(.white)
                             .fontWeight(.semibold)
@@ -43,7 +48,7 @@ struct SessionCard: View {
                                 Image(systemName: "dumbbell")
                                     .foregroundStyle(Color("BrandSecondary"))
                                     .font(.caption)
-                                Text("\(session.exercises.count) Exercises")
+                                Text("\(session.sessionExercises.count) Exercises")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
                             }
@@ -78,8 +83,10 @@ struct SessionCard: View {
             if isExpanded {
                 Divider().background(Color.gray.opacity(0.3))
                 
-                ForEach(session.exercises) { exercise in
-                    ExerciseRow(exercise: exercise)
+                ForEach(session.sessionExercises) { se in
+                    if se.exercise != nil {
+                        ExerciseRow(exercise: se,workoutColor: se.exercise?.themeColor)
+                    }
                 }
             }
         }
@@ -91,7 +98,7 @@ struct SessionCard: View {
     
     func minToMinSec(minutes: Int) -> String {
         if minutes < 60 {
-            return "\(minutes) min"
+            return "\(minutes)m"
         }
         
         let min = minutes / 60
@@ -101,16 +108,36 @@ struct SessionCard: View {
 }
 
 #Preview {
-    SessionCard(session: WorkoutSession(title: "Test day", date: Date(), exercises: [
-        ExerciseDetail(
-            name: "Tes exercise",
-            muscle: "Back",
-            sets: [
-                ExerciseSet(reps: 10, weight: 20, rest: 60),
-                ExerciseSet(reps: 8, weight: 25, rest: 75),
-                ExerciseSet(reps: 6, weight: 30, rest: 90)
-            ],
-            duration: 15
-        )
-    ]))
+    let exercise1 = Exercise(name: "Bench Press", muscleGroup: "Chest")
+    let exercise2 = Exercise(name: "Shoulder Press", muscleGroup: "Shoulders")
+    
+    let routine = Routine(title: "Push Day", exercises: [exercise1, exercise2])
+    
+    let session = Session(date: Date(), routine: routine)
+    session.isCompleted = true
+    
+    let se1 = SessionExercise(session: session, exercise: exercise1)
+    se1.sets = [
+        SessionSet(setNumber: 1, reps: 10, weight: 60),
+        SessionSet(setNumber: 2, reps: 8, weight: 70)
+    ]
+    se1.sets.forEach {
+        $0.setDuration = 40
+        $0.restDuration = 60
+    }
+    
+    let se2 = SessionExercise(session: session, exercise: exercise2)
+    se2.sets = [
+        SessionSet(setNumber: 1, reps: 12, weight: 30),
+        SessionSet(setNumber: 2, reps: 10, weight: 35)
+    ]
+    se2.sets.forEach {
+        $0.setDuration = 30
+        $0.restDuration = 45
+    }
+    
+    session.sessionExercises = [se1, se2]
+    
+    return SessionCard(session: session)
+        .background(.black)
 }

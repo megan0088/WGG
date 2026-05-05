@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct SessionListView: View {
+    @Query(sort: \Session.date, order: .reverse)
+    var sessions: [Session]
+    
     let date: Date
     let calendar = Calendar.current
     
-    var sessionsForDate: [WorkoutSession] {
-        DashboardData.sessions.filter {
-            calendar.isDate($0.date, inSameDayAs: date)
+    var sessionsForDate: [Session] {
+        sessions.filter {
+            calendar.isDate($0.date, inSameDayAs: date) && $0.isCompleted
         }
     }
     

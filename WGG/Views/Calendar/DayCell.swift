@@ -10,7 +10,7 @@ import SwiftUI
 struct DayCell: View {
     let date: Date
     let isSelected: Bool
-    let hasWorkout: Bool
+    let workoutColor: Color?
     let calendar = Calendar.current
     
     var body: some View {
@@ -24,14 +24,14 @@ struct DayCell: View {
                 }
                 
                 Text(dayNumber(date))
-                    .fontWeight(isSelected ? .bold : (hasWorkout ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? .black : (hasWorkout ? .white : .gray))
+                    .fontWeight(isSelected ? .bold : (workoutColor != nil ? .semibold : .regular))
+                    .foregroundStyle(isSelected ? .black : (workoutColor ?? .gray))
             }
             .frame(width: 36, height: 36)
             
             // Dot kecil
             Circle()
-                .fill(hasWorkout ? Color("Accent") : Color.clear)
+                .fill(workoutColor ?? Color.clear)
                 .frame(width: 6, height: 6)
         }
         .frame(maxWidth: .infinity)
@@ -46,5 +46,5 @@ struct DayCell: View {
 }
 
 #Preview {
-    DayCell(date: Date(), isSelected: true, hasWorkout: true)
+    DayCell(date: Date(), isSelected: true, workoutColor: Color("Accent") )
 }
