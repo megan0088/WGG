@@ -7,12 +7,24 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
-struct Exercise: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let muscleGroup: String
+@Model
+class Exercise: Identifiable {
+    var id: UUID = UUID()
+    var name: String
+    var muscleGroup: String
     
+    var routines: [Routine] = []
+    
+    var sessionExercises: [SessionExercise] = []
+    
+    init(name: String, muscleGroup: String) {
+        self.name = name
+        self.muscleGroup = muscleGroup
+    }
+    
+    @Transient
     var themeColor: Color {
         switch muscleGroup {
         case "Back":
