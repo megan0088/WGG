@@ -157,20 +157,29 @@ struct CalendarView: View {
                                 let days = daysInMonth()
                                 ForEach(0..<days.count, id: \.self) { index in
                                     if let date = days[index] {
-                                        let sessionForDate = sessions.first {
+                                        let sessionsForDate = sessions.filter {
                                             $0.isCompleted &&
                                             calendar.isDate($0.date, inSameDayAs: date)
                                         }
 
-                                        let color =
-                                            sessionForDate?.routine?.themeColor ??
-                                            sessionForDate?.sessionExercises.first?.exercise?.themeColor
+                                        let lastSession = sessionsForDate.sorted {
+                                            $0.date > $1.date
+                                        }.first
+
+                                        let highlightColor =
+                                            lastSession?.routine?.themeColor ??
+                                            lastSession?.sessionExercises.first?.exercise?.themeColor
+
+                                        let sessionColors: [Color] = sessionsForDate.compactMap {
+                                            $0.routine?.themeColor ??
+                                            $0.sessionExercises.first?.exercise?.themeColor
+                                        }
 
                                         DayCell(
                                             date: date,
                                             isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
-                                            workoutColor: color
-
+                                            highlightColor: highlightColor,
+                                            sessionColors: sessionColors
                                         )
                                         .onTapGesture {
                                             selectedDate = date

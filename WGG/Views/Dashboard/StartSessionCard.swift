@@ -26,8 +26,14 @@ struct StartSessionCard: View {
                 selectedTab = .workout
             } label: {
                 HStack {
-                    Text("Start Today's Session")
-                        .fontWeight(.bold)
+                    if let last = last,
+                       Calendar.current.isDateInToday(last.date) {
+                        Text("Start Another Session")
+                            .fontWeight(.bold)
+                    } else {
+                        Text("Start Today's Session")
+                            .fontWeight(.bold)
+                    }
                     Image(systemName: "chevron.right")
                         .font(.subheadline)
                         .padding(.leading, 4)
@@ -46,12 +52,18 @@ struct StartSessionCard: View {
            Calendar.current.isDateInToday(last.date) {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
-                    Image(systemName: "checkmark.circle")
-                        .foregroundStyle(Color.accent)
-                        .font(.headline)
-                    Text("Session Complete")
-                        .font(.headline)
-                        .foregroundStyle(Color.accent)
+                    HStack {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundStyle(Color.accent)
+                            .font(.headline)
+                        Text("Last Session")
+                            .font(.headline)
+                            .foregroundStyle(Color.accent)
+                    }
+                    Spacer()
+                    Text(last.date, format: .dateTime.hour().minute())
+                        .font(.subheadline)
+                        .foregroundStyle(Color("PrimaryText"))
                 }
                 
                 Text(last.routine?.title ?? "Workout")

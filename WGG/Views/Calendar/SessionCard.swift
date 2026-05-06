@@ -6,14 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SessionCard: View {
+    @Environment(\.modelContext) private var context
+    
     let session: Session
+    
     @State private var isExpanded = false
+    @State private var offset: CGFloat = 0
     
     var totalVolume: Double {
         session.sessionExercises
-            .flatMap {$0.sets}
+            .flatMap { $0.sets }
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
     }
     
@@ -22,11 +27,11 @@ struct SessionCard: View {
             .flatMap { $0.sets }
             .filter { $0.isCompleted }
         
-        let seconds = sets.reduce(0) { result, set in
-            result + (set.setDuration ?? 0) + (set.restDuration ?? 0)
+        let seconds = sets.reduce(0) {
+            $0 + ($1.setDuration ?? 0) + ($1.restDuration ?? 0)
         }
         
-        return "\(Int(seconds / 60))m"
+        return formatTime(seconds)
     }
 
     var totalRestText: String {
@@ -34,82 +39,203 @@ struct SessionCard: View {
             .flatMap { $0.sets }
             .filter { $0.isCompleted }
         
-        let seconds = sets.reduce(0) { result, set in
-            result + (set.restDuration ?? 0)
+        let seconds = sets.reduce(0) {
+            $0 + ($1.restDuration ?? 0)
         }
         
-        return "\(Int(seconds / 60))m"
+        return formatTime(seconds)
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // header
+        ZStack(alignment: .trailing) {
+            
             Button {
-                withAnimation(.spring()) { isExpanded.toggle() }
+                context.delete(session)
+                
+                do {
+                    try context.save()
+                } catch {
+                    print("Delete failed")
+                }
             } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(session.routine?.title ?? "Workout")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
+                Image(systemName: "trash")
+                    .foregroundStyle(.white)
+                    .frame(width: 60)
+                    .frame(height: 60)
+                    .background(Color.red)
+                    .clipShape(Circle())
+            }
+            
+            mainContent.offset(x: offset)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipped()
+    }
+    
+    var header: some View {
+        HStack {
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                Text(session.routine?.title ?? "Workout")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .fontWeight(.semibold)
+                
+                HStack(spacing: 16) {
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "dumbbell")
+                            .foregroundStyle(Color("BrandSecondary"))
+                            .font(.caption)
                         
-                        HStack(spacing: 16) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "dumbbell")
-                                    .foregroundStyle(Color("BrandSecondary"))
-                                    .font(.caption)
-                                Text("\(session.sessionExercises.count) Exercises")
-                                    .font(.caption)
-                                    .foregroundStyle(Color("BrandSecondary"))
-                            }
-                            
-                            HStack(spacing: 6) {
-                                Image(systemName: "figure.strengthtraining.traditional")
-                                    .foregroundStyle(Color("BrandSecondary"))
-                                    .font(.caption)
-                                Text("\(Int(totalVolume)) kg")
-                                    .font(.caption)
-                                    .foregroundStyle(Color("BrandSecondary"))
-                            }
-                            
-                            HStack(spacing: 6) {
-                                Image(systemName: "clock")
-                                    .foregroundStyle(Color("BrandSecondary"))
-                                    .font(.caption)
-                                Text("\(totalDurationText) (rest: \(totalRestText))")
-                                    .font(.caption)
-                                    .foregroundStyle(Color("BrandSecondary"))
-                            }
-                        }
+                        Text("\(session.sessionExercises.count) Exercises")
+                            .font(.caption)
+                            .foregroundStyle(Color("BrandSecondary"))
                     }
-                    Spacer()
-                    Image(systemName: "chevron.down")
-                        .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                        .foregroundStyle(Color("BrandSecondary"))
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "figure.strengthtraining.traditional")
+                            .foregroundStyle(Color("BrandSecondary"))
+                            .font(.caption)
+                        
+                        Text("\(Int(totalVolume)) kg")
+                            .font(.caption)
+                            .foregroundStyle(Color("BrandSecondary"))
+                    }
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "clock")
+                            .foregroundStyle(Color("BrandSecondary"))
+                            .font(.caption)
+                        
+                        Text("\(totalDurationText) (rest: \(totalRestText))")
+                            .font(.caption)
+                            .foregroundStyle(Color("BrandSecondary"))
+                    }
                 }
             }
             
-            // list exercise ketika user klik
-            if isExpanded {
-                Divider().background(Color.gray.opacity(0.3))
-                
-                ForEach(session.sessionExercises) { se in
-                    if se.exercise != nil {
-                        ExerciseRow(exercise: se,workoutColor: se.exercise?.themeColor)
-                    }
+            Spacer()
+            
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isExpanded.toggle()
                 }
+            } label: {
+                Image(systemName: "chevron.down")
+                    .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                    .foregroundStyle(Color("BrandSecondary"))
             }
         }
         .padding()
-        .background(Color(#colorLiteral(red: 0.1013579145, green: 0.1013579145, blue: 0.1013579145, alpha: 1)))
+        .background(
+            Color(
+                #colorLiteral(
+                    red: 0.1013579145,
+                    green: 0.1013579145,
+                    blue: 0.1013579145,
+                    alpha: 1
+                )
+            )
+        )
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 20)
+                .onChanged { value in
+                    
+                    let horizontal = abs(value.translation.width)
+                    let vertical = abs(value.translation.height)
+                    
+                    guard horizontal > vertical * 1.5 else {
+                        return
+                    }
+                    
+                    if value.translation.width < 0 {
+                        offset = value.translation.width
+                    }
+                }
+                .onEnded { value in
+                    
+                    let horizontal = abs(value.translation.width)
+                    let vertical = abs(value.translation.height)
+                    
+                    guard horizontal > vertical * 1.5 else {
+                        
+                        withAnimation {
+                            offset = 0
+                        }
+                        
+                        return
+                    }
+                    
+                    withAnimation {
+                        
+                        if value.translation.width < -160 {
+                            
+                            context.delete(session)
+                            
+                            do {
+                                try context.save()
+                            } catch {
+                                print("Delete failed")
+                            }
+                            
+                        } else if value.translation.width < -70 {
+                            
+                            offset = -75
+                            
+                        } else {
+                            
+                            offset = 0
+                        }
+                    }
+                }
+        )
+    }
+    
+    var mainContent: some View {
+        VStack(spacing: 0) {
+
+            header
+
+            if isExpanded {
+
+                Divider()
+                    .background(Color.gray.opacity(0.3))
+
+                VStack(spacing: 8) {
+
+                    ForEach(session.sessionExercises) { se in
+                        if se.exercise != nil {
+                            ExerciseRow(
+                                exercise: se,
+                                workoutColor: se.exercise?.themeColor
+                            )
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .background(
+            Color(
+                #colorLiteral(
+                    red: 0.1013579145,
+                    green: 0.1013579145,
+                    blue: 0.1013579145,
+                    alpha: 1
+                )
+            )
+        )
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
     func formatTime(_ seconds: Int) -> String {
-        let total = Int(seconds)
-        let minutes = total / 60
-        let secs = total % 60
+        let minutes = seconds / 60
+        let secs = seconds % 60
+        
         return String(format: "%dm %02ds", minutes, secs)
     }
 }

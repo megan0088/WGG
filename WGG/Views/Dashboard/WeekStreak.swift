@@ -8,6 +8,9 @@
 import SwiftUI
 import _SwiftData_SwiftUI
 
+import SwiftUI
+import _SwiftData_SwiftUI
+
 struct WeekStreak: View {
     
     @Binding var selectedTab: Tab
@@ -19,42 +22,27 @@ struct WeekStreak: View {
     
     var dates: [Date] {
         let start = calendar.dateInterval(of: .weekOfYear, for: Date())!.start
-        return (0..<7).map { calendar.date(byAdding: .day, value: $0, to: start)! }
-    }
-    
-    var workouts: [Date: (title: String, color: Color)] {
-        var dict: [Date: (String, Color)] = [:]
-        
-        for session in sessions where session.isCompleted {
-            let key = calendar.startOfDay(for: session.date)
-            
-            let title = session.routine?.title
-                .components(separatedBy: " ")
-                .first ?? "Workout"
-            
-            let color =
-                session.routine?.themeColor ??
-                session.sessionExercises.first?.exercise?.themeColor ??
-                .gray
-            
-            dict[key] = (title, color)
+        return (0..<7).map {
+            calendar.date(byAdding: .day, value: $0, to: start)!
         }
-        
-        return dict
     }
     
     var totalMinutes: Int {
         let interval = calendar.dateInterval(of: .weekOfYear, for: Date())!
         
         let totalSeconds = sessions
-            .filter { $0.isCompleted && $0.date >= interval.start && $0.date < interval.end }
+            .filter {
+                $0.isCompleted &&
+                $0.date >= interval.start &&
+                $0.date < interval.end
+            }
             .flatMap { $0.sessionExercises }
             .flatMap { $0.sets }
             .reduce(0) { partial, set in
                 partial + (set.setDuration ?? 0) + (set.restDuration ?? 0)
             }
         
-        return Int(totalSeconds / 60)
+        return totalSeconds / 60
     }
     
     var currentStreak: Int {
@@ -72,7 +60,12 @@ struct WeekStreak: View {
             
             if hasWorkout {
                 streak += 1
-                currentWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: currentWeek)!
+                
+                currentWeek = calendar.date(
+                    byAdding: .weekOfYear,
+                    value: -1,
+                    to: currentWeek
+                )!
             } else {
                 break
             }
@@ -84,16 +77,17 @@ struct WeekStreak: View {
     var body: some View {
         
         ZStack {
-            // background
             Color.black
                 .ignoresSafeArea()
             
             Button {
                 selectedTab = .calendar
             } label: {
+                
                 VStack(alignment: .leading, spacing: 12) {
-                    //title
+                    
                     HStack {
+                        
                         Text("My Week")
                             .fontWeight(.bold)
                             .font(.headline)
@@ -107,69 +101,119 @@ struct WeekStreak: View {
                             .foregroundStyle(Color("BrandSecondary"))
                     }
                     
-                    // calendar
                     HStack(spacing: 0) {
-                        ForEach(dates, id: \.self) { date in
+                        
+                        ForEach(
+                            Array(dates.enumerated()),
+                            id: \.offset
+                        ) { _, date in
                             
                             let isToday = calendar.isDateInToday(date)
-                            let workoutData = workouts.first {
-                                calendar.isDate($0.key, inSameDayAs: date)
-                            }?.value
+                            
+                            let sessionsForDate = sessions.filter {
+                                $0.isCompleted &&
+                                calendar.isDate($0.date, inSameDayAs: date)
+                            }
+                            
+                            let lastSession = sessionsForDate.sorted {
+                                $0.date < $1.date
+                            }.last
+                            
+                            let highlightColor =
+                                lastSession?.routine?.themeColor ??
+                                lastSession?.sessionExercises.first?.exercise?.themeColor
+                            
+                            let sessionColors: [Color] = sessionsForDate.compactMap {
+                                $0.routine?.themeColor ??
+                                $0.sessionExercises.first?.exercise?.themeColor
+                            }
                             
                             VStack(spacing: 6) {
                                 
-                                // hari
                                 Text(dayString(from: date))
                                     .font(.caption)
                                     .fontWeight(.medium)
                                     .foregroundStyle(Color("BrandSecondary"))
                                 
-                                // tanggal
-                                ZStack {
+                                VStack(spacing: 4) {
                                     
-                                    if let data = workoutData {
-                                        Circle()
-                                            .fill(data.color.opacity(0.25))
-                                            .frame(width: 36, height: 36)
+                                    ZStack {
+
+                                        if isToday {
+
+                                            Circle()
+                                                .fill(Color("Accent"))
+                                                .frame(width: 36, height: 36)
+
+                                        } else {
+
+                                            if let highlightColor {
+                                                Circle()
+                                                    .fill(highlightColor.opacity(0.22))
+                                                    .frame(width: 36, height: 36)
+                                            }
+
+                                            Circle()
+                                                .stroke(
+                                                    highlightColor ?? Color.clear,
+                                                    lineWidth: 2
+                                                )
+                                                .frame(width: 36, height: 36)
+                                        }
+
+                                        Text("\(dayNumber(from: date))")
+                                            .font(.footnote)
+                                            .fontWeight(isToday ? .bold : .regular)
+                                            .foregroundStyle(
+                                                isToday
+                                                ? .black
+                                                : (
+                                                    highlightColor ??
+                                                    Color(
+                                                        #colorLiteral(
+                                                            red: 0.3364,
+                                                            green: 0.3364,
+                                                            blue: 0.3364,
+                                                            alpha: 1
+                                                        )
+                                                    )
+                                                )
+                                            )
                                     }
                                     
-                                    Circle()
-                                        .stroke(
-                                            workoutData != nil ? (workoutData?.color ?? Color("Accent")) : Color.clear,
-                                            lineWidth: 2
-                                        )
-                                        .frame(width: 36, height: 36)
-                                    
-                                    if isToday {
-                                        Circle()
-                                            .fill(workoutData?.color.opacity(0.2) ?? Color("Accent").opacity(0.2))
-                                            .frame(width: 36, height: 36)
+                                    HStack(spacing: 3) {
+                                        
+                                        ForEach(
+                                            Array(sessionColors.prefix(4).enumerated()),
+                                            id: \.offset
+                                        ) { _, color in
+                                            
+                                            Circle()
+                                                .fill(color)
+                                                .frame(width: 5, height: 5)
+                                        }
                                     }
-                                    
-                                    Text("\(dayNumber(from: date))")
-                                        .font(.footnote)
-                                        .foregroundStyle(
-                                            workoutData != nil || isToday
-                                            ? (workoutData?.color ?? Color("Accent"))
-                                            : Color(#colorLiteral(red: 0.3364, green: 0.3364, blue: 0.3364, alpha: 1))
-                                        )
+                                    .frame(height: 6)
                                 }
                             }
                             .frame(maxWidth: .infinity)
                         }
                     }
                     
-                    // stats
                     HStack {
-                        // week streak
+                        
                         HStack {
+                            
                             Image(systemName: "bolt.fill")
                                 .fontWeight(.bold)
                                 .foregroundStyle(Color("Accent"))
+                            
                             VStack(alignment: .leading) {
+                                
                                 Text("\(currentStreak) weeks")
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
+                                
                                 Text("current streak")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
@@ -178,15 +222,18 @@ struct WeekStreak: View {
                         
                         Spacer()
                         
-                        // workout duration
                         HStack {
+                            
                             Image(systemName: "clock")
                                 .fontWeight(.bold)
                                 .foregroundStyle(Color("Accent"))
+                            
                             VStack(alignment: .leading) {
+                                
                                 Text("\(totalMinutes)")
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
+                                
                                 Text("minutes")
                                     .font(.caption)
                                     .foregroundStyle(Color("BrandSecondary"))
@@ -198,7 +245,16 @@ struct WeekStreak: View {
                     .overlay(
                         Rectangle()
                             .frame(height: 1)
-                            .foregroundStyle(Color(#colorLiteral(red: 0.1777858436, green: 0.1777858436, blue: 0.1777858436, alpha: 1))),
+                            .foregroundStyle(
+                                Color(
+                                    #colorLiteral(
+                                        red: 0.1777858436,
+                                        green: 0.1777858436,
+                                        blue: 0.1777858436,
+                                        alpha: 1
+                                    )
+                                )
+                            ),
                         
                         alignment: .top
                     )
@@ -206,22 +262,21 @@ struct WeekStreak: View {
                 .padding()
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color("Accent").opacity(0.15), lineWidth: 2.5)
+                        .stroke(
+                            Color("Accent").opacity(0.15),
+                            lineWidth: 2.5
+                        )
                 )
             }
         }
     }
     
-    // MARK: - Helpers
-        
-    // get day name
     func dayString(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "E"
         return formatter.string(from: date)
     }
     
-    // get day number
     func dayNumber(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "d"

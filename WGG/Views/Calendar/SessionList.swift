@@ -9,6 +9,8 @@ import SwiftUI
 import _SwiftData_SwiftUI
 
 struct SessionListView: View {
+    @Environment(\.modelContext) private var context
+    
     @Query(sort: \Session.date, order: .reverse)
     var sessions: [Session]
     
@@ -17,7 +19,8 @@ struct SessionListView: View {
     
     var sessionsForDate: [Session] {
         sessions.filter {
-            calendar.isDate($0.date, inSameDayAs: date) && $0.isCompleted
+            calendar.isDate($0.date, inSameDayAs: date) &&
+            $0.isCompleted
         }
     }
     
@@ -27,15 +30,19 @@ struct SessionListView: View {
                 VStack(spacing: 12) {
                     Image(systemName: "dumbbell.fill")
                         .font(.largeTitle)
+                    
                     Text("No Workouts")
                         .font(.headline)
                 }
                 .foregroundStyle(.gray.opacity(0.5))
                 .padding(.top, 40)
                 .frame(maxWidth: .infinity)
+                
             } else {
-                ForEach(sessionsForDate) { session in
-                    SessionCard(session: session)
+                VStack(spacing: 12) {
+                    ForEach(sessionsForDate) { session in
+                        SessionCard(session: session)
+                    }
                 }
             }
         }

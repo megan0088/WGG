@@ -10,34 +10,54 @@ import SwiftUI
 struct DayCell: View {
     let date: Date
     let isSelected: Bool
-    let workoutColor: Color?
-    let calendar = Calendar.current
-    
+    let highlightColor: Color?
+    let sessionColors: [Color]
+
     var body: some View {
         VStack(spacing: 6) {
+
             ZStack {
-                // Background bulat saat dipilih
-                if isSelected {
-                    Circle()
-                        .fill(Color("Accent"))
-                        .frame(width: 36, height: 36)
-                }
-                
+
+                Circle()
+                    .fill(
+                        isSelected
+                        ? Color("Accent")
+                        : (highlightColor ?? Color.clear).opacity(0.25)
+                    )
+                    .frame(width: 36, height: 36)
+
                 Text(dayNumber(date))
-                    .fontWeight(isSelected ? .bold : (workoutColor != nil ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? .black : (workoutColor ?? .gray))
+                    .fontWeight(
+                        isSelected
+                        ? .bold
+                        : (highlightColor != nil ? .semibold : .regular)
+                    )
+                    .foregroundStyle(
+                        isSelected
+                        ? .black
+                            : (highlightColor ?? .gray)
+                    )
             }
             .frame(width: 36, height: 36)
-            
-            // Dot kecil
-            Circle()
-                .fill(workoutColor ?? Color.clear)
-                .frame(width: 6, height: 6)
+
+            HStack(spacing: 3) {
+
+                ForEach(
+                    Array(sessionColors.prefix(4).enumerated()),
+                    id: \.offset
+                ) { _, color in
+
+                    Circle()
+                        .fill(color)
+                        .frame(width: 5, height: 5)
+                }
+            }
+            .frame(height: 6)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 52)
     }
-    
+
     func dayNumber(_ date: Date) -> String {
         let f = DateFormatter()
         f.dateFormat = "d"
@@ -46,5 +66,5 @@ struct DayCell: View {
 }
 
 #Preview {
-    DayCell(date: Date(), isSelected: true, workoutColor: Color("Accent") )
+    DayCell(date: Date(), isSelected: true, highlightColor: nil, sessionColors: [])
 }
