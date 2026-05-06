@@ -79,7 +79,7 @@ struct RecentPRsCard: View {
                                             .font(.subheadline)
                                             .fontWeight(.bold)
                                     }
-                                    .foregroundColor(Color("Accent"))
+                                    .foregroundStyle(Color("Accent"))
                                     
                                     Spacer()
                                 }

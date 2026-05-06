@@ -134,7 +134,7 @@ struct AnalyticsView: View {
                         Text("Analytics")
                             .font(.title)
                             .bold()
-                            .foregroundColor(.primaryText)
+                            .foregroundStyle(.primaryText)
                     }
                     .padding(.horizontal)
                     
@@ -157,7 +157,7 @@ struct AnalyticsView: View {
                             Image(systemName: "chevron.up.chevron.down")
                                 .opacity(0.5)
                         }
-                        .foregroundColor(.primaryText)
+                        .foregroundStyle(.primaryText)
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(.card)
@@ -170,15 +170,15 @@ struct AnalyticsView: View {
                         VStack(alignment: .leading) {
                             Text("Best Set")
                                 .font(.subheadline)
-                                .foregroundColor(.primaryText.opacity(0.5))
+                                .foregroundStyle(.primaryText.opacity(0.5))
                             Text("\(bestSet.weight, specifier: "%.1f") kg x \(bestSet.reps)")
                                 .font(.title2)
-                                .foregroundColor(.primaryText)
+                                .foregroundStyle(.primaryText)
                                 .bold()
                                 .padding(.vertical, 1)
                             Text(bestSet.date.formatted(.dateTime.month(.abbreviated).day()))
                                 .font(.caption)
-                                .foregroundColor(.primaryText)
+                                .foregroundStyle(.primaryText)
                                 .opacity(0.5)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -189,15 +189,15 @@ struct AnalyticsView: View {
                         VStack(alignment: .leading) {
                             Text("Total Session")
                                 .font(.subheadline)
-                                .foregroundColor(.primaryText.opacity(0.5))
+                                .foregroundStyle(.primaryText.opacity(0.5))
                             Text("\(totalSession)")
                                 .font(.title2)
-                                .foregroundColor(.accent)
+                                .foregroundStyle(.accent)
                                 .bold()
                                 .padding(.vertical, 1)
                             Text("Last: \(lastSession?.date.formatted(.dateTime.month(.abbreviated).day()) ?? "-")")
                                 .font(.caption)
-                                .foregroundColor(.primaryText)
+                                .foregroundStyle(.primaryText)
                                 .opacity(0.5)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)

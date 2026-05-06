@@ -15,7 +15,7 @@ struct PageTitle: View {
             Text(title)
                 .font(.title)
                 .bold()
-                .foregroundColor(.primaryText)
+                .foregroundStyle(.primaryText)
         }
     }
 }

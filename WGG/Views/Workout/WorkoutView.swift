@@ -190,7 +190,7 @@ struct WorkoutView: View {
                     //                VStack(alignment: .leading) {
                     //                    Text("THEME COLOR")
                     //                        .font(.caption)
-                    //                        .foregroundColor(.gray)
+                    //                        .foregroundStyle(.gray)
                     //                    
                     //                    HStack(spacing: 12) {
                     //                        ForEach(availableColors, id: \.self) { color in

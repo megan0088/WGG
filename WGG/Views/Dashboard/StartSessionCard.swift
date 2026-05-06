@@ -51,7 +51,7 @@ struct StartSessionCard: View {
                         .font(.headline)
                     Text("Session Complete")
                         .font(.headline)
-                        .foregroundColor(Color.accent)
+                        .foregroundStyle(Color.accent)
                 }
                 
                 Text(last.routine?.title ?? "Workout")
