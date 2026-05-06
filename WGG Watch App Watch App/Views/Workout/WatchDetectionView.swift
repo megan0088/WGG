@@ -2,6 +2,7 @@ import SwiftUI
 
 struct WatchDetectionView: View {
     let exercise: WatchExercise
+    let exercises: [WatchExercise]
     let weight: Double
     let reps: Int
     let detectedName: String
@@ -71,10 +72,10 @@ struct WatchDetectionView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $goToSetDone) {
-            WatchSetDoneView(exercise: exercise, weight: weight, reps: reps)
+            WatchSetDoneView(exercise: exercise, exercises: exercises, weight: weight, reps: reps)
         }
         .navigationDestination(isPresented: $goBackToActive) {
-            WatchActiveSetView(exercise: exercise, weight: weight)
+            WatchActiveSetView(exercise: exercise, exercises: exercises, weight: weight)
         }
     }
 }
@@ -83,6 +84,7 @@ struct WatchDetectionView: View {
     NavigationStack {
         WatchDetectionView(
             exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back"),
+            exercises: WatchRoutine.mock.exercises,
             weight: 82.5,
             reps: 8,
             detectedName: "Bench Press",

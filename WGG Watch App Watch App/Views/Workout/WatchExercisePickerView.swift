@@ -1,14 +1,17 @@
 import SwiftUI
 
-struct WatchWorkoutView: View {
-    let routines = WatchRoutine.mockRoutines
+struct WatchExercisePickerView: View {
+    let exercises: [WatchExercise]
+
+    @State private var selectedExercise: WatchExercise?
+    @State private var goToWeightInput = false
 
     var body: some View {
         ZStack {
             Color.brandBackground.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                Text("WORKOUTS")
+                Text("WHICH EXERCISE?")
                     .font(.system(size: 10, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.brandSecondary)
                     .padding(.top, 8)
@@ -16,16 +19,17 @@ struct WatchWorkoutView: View {
 
                 ScrollView {
                     VStack(spacing: 6) {
-                        ForEach(routines) { routine in
-                            NavigationLink {
-                                WatchExercisePickerView(exercises: routine.exercises)
+                        ForEach(exercises) { exercise in
+                            Button {
+                                selectedExercise = exercise
+                                goToWeightInput = true
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 2) {
-                                        Text(routine.name)
+                                        Text(exercise.name)
                                             .font(.caption.bold())
                                             .foregroundStyle(Color.brandPrimaryText)
-                                        Text("\(routine.exercises.count) exercises")
+                                        Text(exercise.muscleGroup)
                                             .font(.caption2)
                                             .foregroundStyle(Color.brandSecondary)
                                     }
@@ -47,11 +51,17 @@ struct WatchWorkoutView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $goToWeightInput) {
+            if let exercise = selectedExercise {
+                WatchWeightInputView(exercise: exercise, exercises: exercises)
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        WatchWorkoutView()
+        WatchExercisePickerView(exercises: WatchRoutine.mock.exercises)
     }
 }

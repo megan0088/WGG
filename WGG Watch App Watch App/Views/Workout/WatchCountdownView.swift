@@ -3,6 +3,7 @@ import Combine
 
 struct WatchCountdownView: View {
     let exercise: WatchExercise
+    let exercises: [WatchExercise]
     let weight: Double
 
     @State private var count = 3
@@ -43,7 +44,7 @@ struct WatchCountdownView: View {
             }
         }
         .navigationDestination(isPresented: $goToActive) {
-            WatchActiveSetView(exercise: exercise, weight: weight)
+            WatchActiveSetView(exercise: exercise, exercises: exercises, weight: weight)
         }
         .onChange(of: count) { _, newValue in
             if newValue == 0 {
@@ -59,6 +60,7 @@ struct WatchCountdownView: View {
     NavigationStack {
         WatchCountdownView(
             exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back"),
+            exercises: WatchRoutine.mock.exercises,
             weight: 60.0
         )
     }

@@ -1,11 +1,22 @@
 import SwiftUI
+import Combine
 
 struct WatchActiveSetView: View {
     let exercise: WatchExercise
+    let exercises: [WatchExercise]
     let weight: Double
 
     @State private var manager = RepCounterManager()
-    @State private var goToDetection = false
+    @State private var goToSetDone = false
+    @State private var elapsedSeconds = 0
+
+    let setTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    var timeString: String {
+        let m = elapsedSeconds / 60
+        let s = elapsedSeconds % 60
+        return String(format: "%d:%02d", m, s)
+    }
 
     var body: some View {
         ZStack {
@@ -28,9 +39,13 @@ struct WatchActiveSetView: View {
                         .contentTransition(.numericText())
                         .animation(.spring(duration: 0.2), value: manager.repCount)
 
-                    Text("\(weight, specifier: "%.1f") kg")
-                        .font(.caption)
-                        .foregroundStyle(Color.brandSecondary)
+                    HStack(spacing: 6) {
+                        Text("\(weight, specifier: "%.1f") kg")
+                        Text("·")
+                        Text(timeString)
+                    }
+                    .font(.caption)
+                    .foregroundStyle(Color.brandSecondary)
                 }
 
                 Spacer()
@@ -50,7 +65,7 @@ struct WatchActiveSetView: View {
 
                 Button {
                     manager.stop()
-                    goToDetection = true
+                    goToSetDone = true
                 } label: {
                     Image(systemName: "checkmark")
                         .font(.footnote.bold())
@@ -67,13 +82,16 @@ struct WatchActiveSetView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear { manager.start() }
         .onDisappear { manager.stop() }
-        .navigationDestination(isPresented: $goToDetection) {
-            WatchDetectionView(
+        .onReceive(setTimer) { _ in
+            elapsedSeconds += 1
+        }
+        .navigationDestination(isPresented: $goToSetDone) {
+            WatchSetDoneView(
                 exercise: exercise,
+                exercises: exercises,
                 weight: weight,
                 reps: manager.repCount,
-                detectedName: exercise.name,
-                confidence:  0.87
+                setDuration: Double(elapsedSeconds)
             )
         }
     }
@@ -83,6 +101,7 @@ struct WatchActiveSetView: View {
     NavigationStack {
         WatchActiveSetView(
             exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back"),
+            exercises: WatchRoutine.mock.exercises,
             weight: 60.0
         )
     }

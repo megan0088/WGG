@@ -2,6 +2,7 @@ import SwiftUI
 
 struct WatchWeightInputView: View {
     let exercise: WatchExercise
+    let exercises: [WatchExercise]
 
     @State private var weight: Double = 20.0
     @FocusState private var crownFocused: Bool
@@ -62,7 +63,7 @@ struct WatchWeightInputView: View {
                     }
 
                     NavigationLink {
-                        WatchCountdownView(exercise: exercise, weight: weight)
+                        WatchCountdownView(exercise: exercise, exercises: exercises, weight: weight)
                     } label: {
                         Text("Start")
                             .font(.footnote.bold())
@@ -84,7 +85,8 @@ struct WatchWeightInputView: View {
 #Preview {
     NavigationStack {
         WatchWeightInputView(
-            exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back")
+            exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back"),
+            exercises: WatchRoutine.mock.exercises
         )
     }
 }

@@ -1,13 +1,22 @@
 import SwiftUI
 
 struct WatchContentView: View {
+    @Environment(WatchSessionManager.self) private var sessionManager
+
     var body: some View {
-        NavigationStack {
-            WatchWorkoutView()
+        if sessionManager.isWorkoutActive {
+            NavigationStack {
+                WatchWorkoutView()
+            }
+        } else {
+            NavigationStack {
+                WatchHomeView()
+            }
         }
     }
 }
 
 #Preview {
     WatchContentView()
+        .environment(WatchSessionManager())
 }
