@@ -62,8 +62,8 @@ class PhoneSessionManager: NSObject {
                         let weight   = setData["weight"] as? Double ?? 0.0
 
                         let sessionSet = SessionSet(setNumber: setNumber, reps: reps, weight: weight)
-                        sessionSet.setDuration = setData["setDuration"] as? Double
-                        sessionSet.restDuration = setData["restDuration"] as? Double
+                        sessionSet.setDuration = setData["setDuration"] as? Int
+                        sessionSet.restDuration = setData["restDuration"] as? Int
                         sessionSet.isCompleted = true
                         sessionSet.sessionExercise = sessionExercise
                         sessionExercise.sets.append(sessionSet)

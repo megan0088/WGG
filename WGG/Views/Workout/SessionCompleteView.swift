@@ -226,6 +226,19 @@ struct SessionCompleteView: View {
                         .padding(.top, 8)
                     }
                     
+                    // 👇 EXERCISE BREAKDOWN MENGGUNAKAN SESSION CARD
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("EXERCISE BREAKDOWN")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.gray)
+                            .padding(.top, 16)
+                            .padding(.horizontal, 8)
+                        
+                        SessionCard(session: session)
+                    }
+                    .padding(.top, 16)
+                    
                     // TOMBOL SELESAI
                     Button(action: onDone) {
                         Text("Done")
