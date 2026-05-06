@@ -51,7 +51,7 @@ struct WatchSummaryView: View {
 
             VStack(spacing: 0) {
                 Text("DONE!")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.system(size: 10, weight: .bold, design: .default))
                     .foregroundStyle(Color.brandAccent)
                     .padding(.top, 8)
                     .padding(.bottom, 4)
@@ -62,7 +62,7 @@ struct WatchSummaryView: View {
                         // Total volume
                         VStack(spacing: 2) {
                             Text("\(Int(totalVolume)) kg")
-                                .font(.system(size: 26, weight: .black, design: .rounded))
+                                .font(.system(size: 26, weight: .black, design: .default))
                                 .foregroundStyle(Color.brandPrimaryText)
                             Text("total volume")
                                 .font(.caption2)
@@ -147,6 +147,12 @@ struct WatchSummaryView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // Auto-send session complete signal — exercise data was already sent per-exercise
+            if sessionManager.sendStatus == .idle {
+                sessionManager.sendToPhone()
+            }
+        }
     }
 }
 

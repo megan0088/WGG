@@ -9,13 +9,12 @@ struct WatchRestTimerView: View {
     let completedReps: Int
 
     @Environment(WatchSessionManager.self) private var sessionManager
-    @State private var timeRemaining: Double = 60
+    @State private var timeRemaining: Double = 75
     @State private var isBlinking = false
     @State private var goToNextSet = false
-    @State private var goToExercisePicker = false
-    @State private var goToSummary = false
+    @State private var goToBreakdown = false
 
-    let totalTime: Double = 60
+    let totalTime: Double = 75
     let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
 
     var isOvertime: Bool { timeRemaining < 0 }
@@ -23,11 +22,13 @@ struct WatchRestTimerView: View {
     var totalRestDuration: Double { totalTime - timeRemaining }
 
     func timeString(_ time: Double) -> String {
-        let displayTime = Int(ceil(time))
-        let absTime = abs(displayTime)
+        if time > 0 && time < 60 {
+            return "\(Int(ceil(time)))s"
+        }
+        let absTime = Int(ceil(abs(time)))
         let minutes = absTime / 60
         let seconds = absTime % 60
-        let sign = time <= -1 ? "-" : ""
+        let sign = time < 0 ? "-" : ""
         return String(format: "%@%02d:%02d", sign, minutes, seconds)
     }
 
@@ -35,83 +36,72 @@ struct WatchRestTimerView: View {
         ZStack {
             Color.brandBackground.ignoresSafeArea()
 
-            VStack(spacing: 3) {
-                // Exercise name
-                Text(exercise.name)
-                    .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.brandSecondary)
-                    .lineLimit(1)
-                    .padding(.top, 4)
-
-                // Last logged set
-                HStack(spacing: 3) {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 9, weight: .bold))
-                    Text("\(String(format: "%.1f", weight)) kg × \(completedReps) reps")
-                        .font(.system(size: 10, weight: .medium))
-                }
-                .foregroundStyle(Color.brandAccent)
+            VStack(spacing: 4) {
+                // Title
+                Text("Rest Time")
+                    .font(.system(size: 13, weight: .semibold, design: .default))
+                    .foregroundStyle(isOvertime ? Color.red : Color.brandAccent)
+                    .padding(.top, 6)
 
                 // Circle timer
                 ZStack {
                     Circle()
                         .stroke(
                             isOvertime
-                                ? Color.red.opacity(isBlinking ? 0.6 : 0.05)
-                                : Color.brandSecondary.opacity(0.15),
-                            lineWidth: 8
+                                ? Color.red.opacity(isBlinking ? 0.5 : 0.1)
+                                : Color.teal.opacity(0.2),
+                            lineWidth: 6
                         )
                         .animation(.easeInOut(duration: 0.5), value: isBlinking)
 
                     Circle()
                         .trim(from: 0, to: progress)
                         .stroke(
-                            isOvertime ? Color.red : Color.brandAccent,
-                            style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                            isOvertime ? Color.red : Color.teal,
+                            style: StrokeStyle(lineWidth: 6, lineCap: .round)
                         )
                         .rotationEffect(.degrees(-90))
                         .animation(.linear(duration: 0.05), value: timeRemaining)
                         .animation(.easeInOut, value: isOvertime)
 
-                    VStack(spacing: 0) {
-                        Text(timeString(timeRemaining))
-                            .font(.system(size: 26, weight: .black, design: .rounded))
-                            .foregroundStyle(isOvertime ? Color.red : Color.brandPrimaryText)
-                            .contentTransition(.numericText())
-                        Text("rest time")
-                            .font(.system(size: 9))
-                            .foregroundStyle(Color.brandSecondary)
-                    }
+                    Text(timeString(timeRemaining))
+                        .font(.system(size: 28, weight: .black, design: .default))
+                        .foregroundStyle(isOvertime ? Color.red : Color.brandPrimaryText)
+                        .contentTransition(.numericText())
                 }
-                .frame(width: 90, height: 90)
+                .frame(width: 88, height: 88)
 
-                // Buttons
-                Button("Next Set") {
-                    sessionManager.updateLastRestDuration(totalRestDuration)
-                    goToNextSet = true
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(Color.brandAccent)
-                .font(.caption2.bold())
+                Spacer(minLength: 4)
 
-                HStack(spacing: 6) {
-                    Button("Next Ex.") {
+                // Buttons — stacked vertically
+                VStack(spacing: 6) {
+                    Button {
                         sessionManager.updateLastRestDuration(totalRestDuration)
-                        goToExercisePicker = true
+                        goToNextSet = true
+                    } label: {
+                        Label("Next Set", systemImage: "arrow.up.arrow.down")
+                            .font(.caption.bold())
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(.black)
                     }
-                    .buttonStyle(.bordered)
-                    .tint(Color.brandSecondary)
-                    .font(.system(size: 9, weight: .medium))
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.teal)
 
-                    Button("Finish") {
+                    Button {
                         sessionManager.updateLastRestDuration(totalRestDuration)
-                        goToSummary = true
+                        sessionManager.finishExercise(exercise.name)
+                        goToBreakdown = true
+                    } label: {
+                        Label("Finish Exercise", systemImage: "checkmark")
+                            .font(.caption.bold())
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(Color.brandPrimaryText)
                     }
-                    .buttonStyle(.bordered)
-                    .tint(Color.brandSecondary)
-                    .font(.system(size: 9, weight: .medium))
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.brandSecondary.opacity(0.2))
                 }
-                .padding(.bottom, 4)
+                .padding(.horizontal, 6)
+                .padding(.bottom, 8)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -125,13 +115,10 @@ struct WatchRestTimerView: View {
             }
         }
         .navigationDestination(isPresented: $goToNextSet) {
-            WatchActiveSetView(exercise: exercise, exercises: exercises, weight: weight)
+            WatchWeightInputView(exercise: exercise, exercises: exercises, initialWeight: weight)
         }
-        .navigationDestination(isPresented: $goToExercisePicker) {
-            WatchExercisePickerView(exercises: exercises)
-        }
-        .navigationDestination(isPresented: $goToSummary) {
-            WatchSummaryView()
+        .navigationDestination(isPresented: $goToBreakdown) {
+            WatchExerciseBreakdownView(exercise: exercise, exercises: exercises)
         }
     }
 }
@@ -139,10 +126,10 @@ struct WatchRestTimerView: View {
 #Preview {
     NavigationStack {
         WatchRestTimerView(
-            exercise: WatchExercise(name: "Pull Up", muscleGroup: "Back"),
+            exercise: WatchExercise(name: "Chest Dip", muscleGroup: "Chest"),
             exercises: WatchRoutine.mock.exercises,
-            weight: 60.0,
-            completedReps: 8
+            weight: 15.25,
+            completedReps: 7
         )
         .environment(WatchSessionManager())
     }

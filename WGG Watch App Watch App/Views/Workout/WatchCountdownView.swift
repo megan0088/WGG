@@ -24,7 +24,7 @@ struct WatchCountdownView: View {
                 Spacer()
 
                 Text(count == 0 ? "GO!" : "\(count)")
-                    .font(.system(size: 72, weight: .black, design: .rounded))
+                    .font(.system(size: 72, weight: .black, design: .default))
                     .foregroundStyle(count == 0 ? Color.brandAccent : Color.brandPrimaryText)
                     .contentTransition(.numericText())
                     .animation(.spring(duration: 0.3), value: count)

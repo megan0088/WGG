@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum setStatus {
+enum SetStatus {
     case completed
     case active
 //    case future
@@ -18,7 +18,7 @@ struct SetRow: View {
     let setNumber: Int
     let weight: String?
     let reps: Int?
-    let status: setStatus
+    let status: SetStatus
     
     var valueText: String{
         if let w = weight, let r = reps {

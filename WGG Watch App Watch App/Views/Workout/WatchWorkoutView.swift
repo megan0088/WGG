@@ -2,56 +2,38 @@ import SwiftUI
 
 struct WatchWorkoutView: View {
     let routines = WatchRoutine.mockRoutines
+    @Environment(WatchSessionManager.self) private var sessionManager
 
     var body: some View {
-        ZStack {
-            Color.brandBackground.ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                Text("WORKOUTS")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.brandSecondary)
-                    .padding(.top, 8)
-                    .padding(.bottom, 4)
-
-                ScrollView {
-                    VStack(spacing: 6) {
-                        ForEach(routines) { routine in
-                            NavigationLink {
-                                WatchExercisePickerView(exercises: routine.exercises)
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(routine.name)
-                                            .font(.caption.bold())
-                                            .foregroundStyle(Color.brandPrimaryText)
-                                        Text("\(routine.exercises.count) exercises")
-                                            .font(.caption2)
-                                            .foregroundStyle(Color.brandSecondary)
-                                    }
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption2)
-                                        .foregroundStyle(Color.brandSecondary)
-                                }
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 6)
-                                .background(Color.brandSecondary.opacity(0.1))
-                                .cornerRadius(8)
-                            }
-                            .buttonStyle(.plain)
-                        }
+        ScrollView {
+            VStack(spacing: 8) {
+                ForEach(routines) { routine in
+                    NavigationLink {
+                        WatchExercisePickerView(exercises: routine.exercises)
+                            .onAppear { sessionManager.currentRoutineName = routine.name }
+                    } label: {
+                        Text(routine.name)
+                            .font(.body.bold())
+                            .foregroundStyle(Color.brandPrimaryText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 8)
+                    .buttonStyle(.plain)
+                    .background(Color.white.opacity(0.08))
+                    .cornerRadius(10)
                 }
             }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 4)
         }
+        .navigationTitle("Choose Routine")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
     NavigationStack {
         WatchWorkoutView()
+            .environment(WatchSessionManager())
     }
 }

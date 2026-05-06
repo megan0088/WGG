@@ -7,9 +7,9 @@ struct WatchHomeView: View {
         ZStack {
             Color.brandBackground.ignoresSafeArea()
 
-            VStack(spacing: 10) {
+            VStack(spacing: 12) {
                 Text("Start Workout?")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 16, weight: .bold, design: .default))
                     .foregroundStyle(Color.brandPrimaryText)
 
                 Button {
@@ -19,7 +19,6 @@ struct WatchHomeView: View {
                         Circle()
                             .fill(Color.brandAccent)
                             .frame(width: 80, height: 80)
-
                         Image(systemName: "play.fill")
                             .font(.system(size: 30, weight: .bold))
                             .foregroundStyle(.black)
@@ -27,6 +26,14 @@ struct WatchHomeView: View {
                     }
                 }
                 .buttonStyle(.plain)
+
+                HStack(spacing: 4) {
+                    Text("🔥")
+                        .font(.caption2)
+                    Text("14 Days Streak")
+                        .font(.caption2)
+                        .foregroundStyle(Color.brandSecondary)
+                }
             }
         }
     }

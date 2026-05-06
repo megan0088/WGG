@@ -251,7 +251,7 @@ struct LogSetView: View {
                         
                         ForEach(currentEx.sets.sorted(by: { $0.setNumber < $1.setNumber })) { set in
                             // Misal enum SetStatus kamu ada .completed dan .active
-                            let status: setStatus = set.isCompleted ? .completed : .active
+                            let status: SetStatus = set.isCompleted ? .completed : .active
                             SetRow(
                                 setNumber: set.setNumber,
                                 weight: set.isCompleted ? "\(String(format: "%.1f", set.weight)) kg" : nil,

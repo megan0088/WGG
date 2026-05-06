@@ -11,6 +11,9 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
     var loggedExercises: [WatchLoggedExercise] = []
     var sendStatus: SendStatus = .idle
     var isWorkoutActive: Bool = false
+    var currentRoutineName: String = ""
+    var finishedExerciseNames: [String] = []
+    var sessionId: UUID = UUID()
 
     func activate() {
         guard WCSession.isSupported() else { return }
@@ -42,6 +45,42 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
         loggedExercises[exIndex].sets[setIndex].restDuration = seconds
     }
 
+    func finishExercise(_ name: String) {
+        if !finishedExerciseNames.contains(name) {
+            finishedExerciseNames.append(name)
+            sendExerciseToPhone(name: name)
+        }
+    }
+
+    private func sendExerciseToPhone(name: String) {
+        guard let ex = loggedExercises.first(where: { $0.name == name }),
+              WCSession.default.activationState == .activated else { return }
+
+        let sets = ex.sets.map { s -> [String: Any] in
+            ["setNumber": s.setNumber, "reps": s.reps, "weight": s.weight,
+             "setDuration": s.setDuration, "restDuration": s.restDuration]
+        }
+        let payload: [String: Any] = [
+            "type": "exerciseUpdate",
+            "sessionId": sessionId.uuidString,
+            "routineName": currentRoutineName,
+            "exercise": ["name": ex.name, "muscleGroup": ex.muscleGroup, "sets": sets] as [String: Any]
+        ]
+
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(payload, replyHandler: nil) { _ in
+                WCSession.default.transferUserInfo(payload)
+            }
+        } else {
+            WCSession.default.transferUserInfo(payload)
+        }
+        print("[Session] Exercise '\(name)' sent to phone (sessionId: \(sessionId))")
+    }
+
+    func setNumber(for exercise: WatchExercise) -> Int {
+        (loggedExercises.first(where: { $0.name == exercise.name })?.sets.count ?? 0) + 1
+    }
+
     func sendToPhone() {
         guard WCSession.default.activationState == .activated else {
             print("[Session] WCSession not activated")
@@ -50,23 +89,23 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
         }
 
         sendStatus = .sending
-        let payload = buildPayload()
+        let payload: [String: Any] = [
+            "type": "sessionComplete",
+            "sessionId": sessionId.uuidString
+        ]
 
         if WCSession.default.isReachable {
-            // iPhone app sedang terbuka — kirim langsung
             WCSession.default.sendMessage(payload, replyHandler: nil) { [weak self] error in
                 print("[Session] sendMessage failed: \(error.localizedDescription), falling back to transferUserInfo")
-                // Fallback jika sendMessage gagal
                 WCSession.default.transferUserInfo(payload)
                 DispatchQueue.main.async { self?.sendStatus = .queued }
             }
             sendStatus = .sent
-            print("[Session] Sent via sendMessage")
+            print("[Session] sessionComplete sent (sessionId: \(sessionId))")
         } else {
-            // iPhone app tidak terbuka — antri, kirim otomatis saat app dibuka
             WCSession.default.transferUserInfo(payload)
             sendStatus = .queued
-            print("[Session] Queued via transferUserInfo (iPhone app not in foreground)")
+            print("[Session] sessionComplete queued (sessionId: \(sessionId))")
         }
     }
 
@@ -74,26 +113,9 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
         loggedExercises = []
         sendStatus = .idle
         isWorkoutActive = false
-    }
-
-    private func buildPayload() -> [String: Any] {
-        [
-            "exercises": loggedExercises.map { ex -> [String: Any] in
-                [
-                    "name": ex.name,
-                    "muscleGroup": ex.muscleGroup,
-                    "sets": ex.sets.map { s -> [String: Any] in
-                        [
-                            "setNumber": s.setNumber,
-                            "reps": s.reps,
-                            "weight": s.weight,
-                            "setDuration": s.setDuration,
-                            "restDuration": s.restDuration
-                        ]
-                    }
-                ]
-            }
-        ]
+        finishedExerciseNames = []
+        currentRoutineName = ""
+        sessionId = UUID()
     }
 
     // MARK: - WCSessionDelegate
