@@ -25,26 +25,35 @@ struct ChartCard: View {
                 Spacer()
                 
                 HStack {
-                    Text("\(data.map({$0.y}).max() ?? 0, specifier: "%.1f") kg")
+                    Text("\(data.map({$0.y}).last ?? 0, specifier: "%.1f") kg")
                         .foregroundStyle(Color.accent)
                         .fontWeight(.black)
                     
                     let firstY: Double? = data.first?.y
                     let lastY: Double? = data.last?.y
+                    
+                    var percentChangeValue: Double {
+                        guard let first = firstY, let last = lastY, first != 0 else { return 0 }
+                        return ((last - first) / first) * 100
+                    }
+                    
                     var percentChange: String {
-                        guard let first = firstY, let last = lastY, first != 0 else { return "0" }
-                        let change = ((last - first)/first) * 100
-                        let formatted = String(format: "%.0f", change)
-                        return change >= 0 ? "+" + formatted : formatted
+                        let formatted = String(format: "%.0f", percentChangeValue)
+                        return percentChangeValue >= 0 ? "+" + formatted : formatted
                     }
                     
                     Text("\(percentChange)%")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .foregroundStyle(Color.accent)
+                        .foregroundStyle(
+                            percentChangeValue >= 0 ? Color.accent : Color.red
+                        )
                         .fontWeight(.bold)
-                        .background(Color.accent.opacity(0.1))
+                        .background(
+                            (percentChangeValue >= 0 ? Color.accent : Color.red)
+                            .opacity(0.1)
+                        )
                         .cornerRadius(5)
                 }
             }
