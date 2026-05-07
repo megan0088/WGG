@@ -10,13 +10,19 @@ import SwiftData
 
 @main
 struct WGGApp: App {
-    @State private var workoutManager = WorkoutManager()
-    @State private var phoneSessionManager = PhoneSessionManager()
+    let workoutManager: WorkoutManager
+    let phoneSessionManager: PhoneSessionManager
     let container: ModelContainer
 
     init() {
         do {
-            container = try ModelContainer(for: Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self)
+            let container = try ModelContainer(for: Routine.self, Exercise.self, Session.self, SessionExercise.self, SessionSet.self)
+            self.container = container
+            let manager = PhoneSessionManager()
+            manager.configure(with: container.mainContext)
+            manager.activate()
+            self.phoneSessionManager = manager
+            self.workoutManager = WorkoutManager()
             MockDataSeeder.seedIfNeeded(context: container.mainContext)
         } catch {
             fatalError("\(error)")
@@ -27,10 +33,6 @@ struct WGGApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.dark)
-                .onAppear {
-                    phoneSessionManager.configure(with: container.mainContext)
-                    phoneSessionManager.activate()
-                }
         }
         .environment(workoutManager)
         .environment(phoneSessionManager)

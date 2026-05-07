@@ -15,11 +15,14 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
     var finishedExerciseNames: [String] = []
     var sessionId: UUID = UUID()
 
-    func activate() {
+    override init() {
+        super.init()
         guard WCSession.isSupported() else { return }
         WCSession.default.delegate = self
         WCSession.default.activate()
     }
+
+    func activate() {}
 
     func logSet(exercise: WatchExercise, weight: Double, reps: Int, setDuration: Double) {
         if let index = loggedExercises.firstIndex(where: { $0.name == exercise.name }) {

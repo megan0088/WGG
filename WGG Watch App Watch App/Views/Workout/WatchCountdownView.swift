@@ -38,13 +38,15 @@ struct WatchCountdownView: View {
             .padding(8)
         }
         .navigationBarBackButtonHidden(true)
+        .background(
+            NavigationLink(isActive: $goToActive) {
+                WatchActiveSetView(exercise: exercise, exercises: exercises, weight: weight)
+            } label: { EmptyView() }
+        )
         .onReceive(timer) { _ in
             if count > 0 {
                 count -= 1
             }
-        }
-        .navigationDestination(isPresented: $goToActive) {
-            WatchActiveSetView(exercise: exercise, exercises: exercises, weight: weight)
         }
         .onChange(of: count) { _, newValue in
             if newValue == 0 {

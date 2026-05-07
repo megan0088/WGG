@@ -77,18 +77,20 @@ struct WatchActiveSetView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .background(
+            NavigationLink(isActive: $goToSetDone) {
+                WatchSetDoneView(
+                    exercise: exercise,
+                    exercises: exercises,
+                    weight: weight,
+                    reps: manager.repCount,
+                    setDuration: Double(elapsedSeconds)
+                )
+            } label: { EmptyView() }
+        )
         .onAppear { manager.start() }
         .onDisappear { manager.stop() }
         .onReceive(setTimer) { _ in elapsedSeconds += 1 }
-        .navigationDestination(isPresented: $goToSetDone) {
-            WatchSetDoneView(
-                exercise: exercise,
-                exercises: exercises,
-                weight: weight,
-                reps: manager.repCount,
-                setDuration: Double(elapsedSeconds)
-            )
-        }
     }
 
     private func weightLabel(_ value: Double) -> String {

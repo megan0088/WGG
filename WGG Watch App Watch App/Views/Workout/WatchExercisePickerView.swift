@@ -3,17 +3,14 @@ import SwiftUI
 struct WatchExercisePickerView: View {
     let exercises: [WatchExercise]
     @Environment(WatchSessionManager.self) private var sessionManager
-    @State private var selectedExercise: WatchExercise?
-    @State private var goToWeightInput = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: 8) {
                 ForEach(exercises) { exercise in
                     let isCompleted = sessionManager.finishedExerciseNames.contains(exercise.name)
-                    Button {
-                        selectedExercise = exercise
-                        goToWeightInput = true
+                    NavigationLink {
+                        WatchWeightInputView(exercise: exercise, exercises: exercises)
                     } label: {
                         HStack {
                             Text(exercise.name)
@@ -34,23 +31,37 @@ struct WatchExercisePickerView: View {
                     .background(Color.white.opacity(isCompleted ? 0.04 : 0.08))
                     .cornerRadius(10)
                 }
+
+                // Finish Workout — visible once at least one exercise is logged
+                if !sessionManager.finishedExerciseNames.isEmpty {
+                    NavigationLink {
+                        WatchSummaryView()
+                    } label: {
+                        Label("Finish Workout", systemImage: "flag.checkered")
+                            .font(.caption.bold())
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(.black)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.brandAccent)
+                    .padding(.top, 4)
+                }
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 4)
         }
         .navigationTitle("Choose Exercise")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $goToWeightInput) {
-            if let exercise = selectedExercise {
-                WatchWeightInputView(exercise: exercise, exercises: exercises)
-            }
-        }
     }
 }
 
 #Preview {
     NavigationStack {
         WatchExercisePickerView(exercises: WatchRoutine.mock.exercises)
-            .environment(WatchSessionManager())
+            .environment({
+                let m = WatchSessionManager()
+                m.finishedExerciseNames = ["Pull Up"]
+                return m
+            }())
     }
 }

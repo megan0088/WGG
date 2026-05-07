@@ -12,37 +12,3 @@ struct ChartData: Identifiable {
     let x: Date
     let y: Double
 }
-
-//class PhoneManager: ObservableObject{
-//    var number: Int
-//    
-//    init(){
-//        initializeRingBellServices()
-//    }
-//    
-//    func call(){
-//        
-//    }
-//    func disconnect(){
-//        
-//    }
-//    
-//    private func initializeRingBellServices(){
-//            
-//    }
-//}
-//
-//class RingBellService{
-//
-//}
-//
-//
-//
-//
-//struct PhoneView: View{
-//    let phoneManager = PhoneManager()
-//    
-//    var body: some View{
-//        
-//    }
-//}

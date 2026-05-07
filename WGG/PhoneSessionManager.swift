@@ -50,7 +50,8 @@ class PhoneSessionManager: NSObject {
               let sessionId = UUID(uuidString: sessionIdStr),
               let exData = message["exercise"] as? [String: Any] else { return }
 
-        let session = findOrCreateSession(id: sessionId, context: context)
+        let routineName = message["routineName"] as? String
+        let session = findOrCreateSession(id: sessionId, routineName: routineName, context: context)
 
         let name = exData["name"] as? String ?? "Unknown"
         let muscleGroup = exData["muscleGroup"] as? String ?? ""
@@ -69,8 +70,9 @@ class PhoneSessionManager: NSObject {
                     reps: setData["reps"] as? Int ?? 0,
                     weight: setData["weight"] as? Double ?? 0.0
                 )
-                set.setDuration = setData["setDuration"] as? Int
-                set.restDuration = setData["restDuration"] as? Int
+                // Cast via NSNumber to handle both Int and Double from Watch
+                set.setDuration = (setData["setDuration"] as? NSNumber)?.intValue
+                set.restDuration = (setData["restDuration"] as? NSNumber)?.intValue
                 set.isCompleted = true
                 set.sessionExercise = sessionExercise
                 sessionExercise.sets.append(set)
@@ -91,12 +93,17 @@ class PhoneSessionManager: NSObject {
               let sessionIdStr = message["sessionId"] as? String,
               let sessionId = UUID(uuidString: sessionIdStr) else { return }
 
-        if let session = activeSessions[sessionId] {
+        // First try in-memory map, then fall back to SwiftData (covers app-restart case)
+        let session = activeSessions[sessionId] ?? fetchSession(watchSessionId: sessionIdStr, context: context)
+
+        if let session {
             session.isCompleted = true
             try? context.save()
             lastReceivedSession = session
             activeSessions.removeValue(forKey: sessionId)
             print("[Phone] Session complete (sessionId: \(sessionId))")
+        } else {
+            print("[Phone] sessionComplete: no session found for id \(sessionId)")
         }
     }
 
@@ -124,8 +131,8 @@ class PhoneSessionManager: NSObject {
                             reps: setData["reps"] as? Int ?? 0,
                             weight: setData["weight"] as? Double ?? 0.0
                         )
-                        set.setDuration = setData["setDuration"] as? Int
-                        set.restDuration = setData["restDuration"] as? Int
+                        set.setDuration = (setData["setDuration"] as? NSNumber)?.intValue
+                        set.restDuration = (setData["restDuration"] as? NSNumber)?.intValue
                         set.isCompleted = true
                         set.sessionExercise = sessionExercise
                         sessionExercise.sets.append(set)
@@ -145,12 +152,28 @@ class PhoneSessionManager: NSObject {
 
     // MARK: - Helpers
 
-    private func findOrCreateSession(id: UUID, context: ModelContext) -> Session {
+    private func findOrCreateSession(id: UUID, routineName: String?, context: ModelContext) -> Session {
         if let existing = activeSessions[id] { return existing }
+        let idStr = id.uuidString
+        if let existing = fetchSession(watchSessionId: idStr, context: context) {
+            activeSessions[id] = existing
+            return existing
+        }
         let session = Session(date: Date())
+        session.watchSessionId = idStr
+        // Link to matching Routine so title and color appear correctly in Calendar/Analytics
+        if let name = routineName, !name.isEmpty {
+            let descriptor = FetchDescriptor<Routine>(predicate: #Predicate { $0.title == name })
+            session.routine = try? context.fetch(descriptor).first
+        }
         context.insert(session)
         activeSessions[id] = session
         return session
+    }
+
+    private func fetchSession(watchSessionId: String, context: ModelContext) -> Session? {
+        let all = (try? context.fetch(FetchDescriptor<Session>())) ?? []
+        return all.first { $0.watchSessionId == watchSessionId && !$0.isCompleted }
     }
 
     private func findOrCreateExercise(name: String, muscleGroup: String, context: ModelContext) -> Exercise {

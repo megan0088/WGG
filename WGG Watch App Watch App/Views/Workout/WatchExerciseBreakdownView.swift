@@ -75,9 +75,11 @@ struct WatchExerciseBreakdownView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .navigationDestination(isPresented: $goToNextExercise) {
-            WatchExercisePickerView(exercises: exercises)
-        }
+        .background(
+            NavigationLink(isActive: $goToNextExercise) {
+                WatchExercisePickerView(exercises: exercises)
+            } label: { EmptyView() }
+        )
     }
 
     @ViewBuilder

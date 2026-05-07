@@ -5,10 +5,10 @@ struct WatchSummaryView: View {
 
     var sendStatusIcon: String {
         switch sessionManager.sendStatus {
-        case .idle: return "iphone.and.arrow.up"
-        case .sending: return "arrow.trianglehead.clockwise"
+        case .idle: return "arrow.up.circle"
+        case .sending: return "arrow.clockwise"
         case .sent: return "checkmark.circle.fill"
-        case .queued: return "clock.arrow.trianglehead.counterclockwise.rotate.90"
+        case .queued: return "clock.arrow.circlepath"
         case .failed: return "exclamationmark.circle"
         }
     }

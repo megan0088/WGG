@@ -105,6 +105,16 @@ struct WatchRestTimerView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .background(
+            Group {
+                NavigationLink(isActive: $goToNextSet) {
+                    WatchWeightInputView(exercise: exercise, exercises: exercises, initialWeight: weight)
+                } label: { EmptyView() }
+                NavigationLink(isActive: $goToBreakdown) {
+                    WatchExerciseBreakdownView(exercise: exercise, exercises: exercises)
+                } label: { EmptyView() }
+            }
+        )
         .onReceive(timer) { _ in
             timeRemaining -= 0.05
             if timeRemaining < 0 && !isBlinking {
@@ -113,12 +123,6 @@ struct WatchRestTimerView: View {
                     isBlinking = true
                 }
             }
-        }
-        .navigationDestination(isPresented: $goToNextSet) {
-            WatchWeightInputView(exercise: exercise, exercises: exercises, initialWeight: weight)
-        }
-        .navigationDestination(isPresented: $goToBreakdown) {
-            WatchExerciseBreakdownView(exercise: exercise, exercises: exercises)
         }
     }
 }

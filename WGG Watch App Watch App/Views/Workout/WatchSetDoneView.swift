@@ -39,14 +39,16 @@ struct WatchSetDoneView: View {
             if isEditing { editView } else { confirmView }
         }
         .navigationBarBackButtonHidden(true)
-        .navigationDestination(isPresented: $goToRest) {
-            WatchRestTimerView(
-                exercise: exercise,
-                exercises: exercises,
-                weight: editedWeight,
-                completedReps: editedReps
-            )
-        }
+        .background(
+            NavigationLink(isActive: $goToRest) {
+                WatchRestTimerView(
+                    exercise: exercise,
+                    exercises: exercises,
+                    weight: editedWeight,
+                    completedReps: editedReps
+                )
+            } label: { EmptyView() }
+        )
     }
 
     // MARK: - Confirm View
